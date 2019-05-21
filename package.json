@@ -1,0 +1,38 @@
+{
+  "name": "vtyx",
+  "version": "0.0.1",
+  "description": "VueJS 2.x with Typescript & JSX",
+  "main": "dist/vtyx.common.js",
+  "module": "dist/vtyx.esm.js",
+  "types": "types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intersec/vtyx.git"
+  },
+  "author": "Intersec",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/intersec/vtyx/issues"
+  },
+  "homepage": "https://github.com/intersec/vtyx#readme",
+  "scripts": {
+    "build": "npm run build:ts && npm run build:bundle",
+    "build:ts": "tsc -p .",
+    "build:bundle": "rollup -c"
+  },
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.1.0",
+    "vue-property-decorator": "^8.1.1",
+    "underscore": "1.8.3",
+    "jquery": ">=1.12.4",
+    "bootstrap": "3.3.7"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "3.3",
+    "@types/jquery": "2.0.48",
+    "@types/underscore": "1.8.0",
+    "rollup": "1.11.3",
+    "typescript": "~3.4"
+  }
+}
