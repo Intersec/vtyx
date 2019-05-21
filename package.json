@@ -25,8 +25,10 @@
     "vue-class-component": "^7.1.0",
     "vue-property-decorator": "^8.1.1",
     "underscore": "1.8.3",
-    "jquery": ">=1.12.4",
-    "bootstrap": "3.3.7"
+    "jquery": ">=1.12.4"
+  },
+  "peerDependencies": {
+    "bootstrap": "^3.3.7"
   },
   "devDependencies": {
     "@types/bootstrap": "3.3",

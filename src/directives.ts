@@ -8,9 +8,6 @@ import { VNodeDirective, DirectiveOptions } from 'vue';
 import _ from 'underscore';
 import $ from 'jquery';
 
-/* For TooltipOptions */
-import 'bootstrap';
-
 interface Directive {
     name: string;
     directive: DirectiveOptions;

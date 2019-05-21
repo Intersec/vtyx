@@ -8,7 +8,6 @@ var vueClassComponent = _interopDefault(require('vue-class-component'));
 var _Vue = _interopDefault(require('vue'));
 var _ = _interopDefault(require('underscore'));
 var $ = _interopDefault(require('jquery'));
-require('bootstrap');
 var vuePropertyDecorator = require('vue-property-decorator');
 
 // tslint:disable:no-bitwise

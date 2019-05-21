@@ -1,8 +1,8 @@
 /** Purpose:
  * List all directives which should be register in VueJs.
  */
+/// <reference types="bootstrap" />
 import { DirectiveOptions } from 'vue';
-import 'bootstrap';
 interface Directive {
     name: string;
     directive: DirectiveOptions;
