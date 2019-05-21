@@ -18,7 +18,10 @@
   "scripts": {
     "build": "npm run build:ts && npm run build:bundle",
     "build:ts": "tsc -p .",
-    "build:bundle": "rollup -c"
+    "build:bundle": "rollup -c",
+    "test": "npm run test:tape && npm run test:eslint",
+    "test:tape": "tape test/*",
+    "test:eslint": "eslint test/*"
   },
   "dependencies": {
     "vue": "^2.6.10",
@@ -35,6 +38,8 @@
     "@types/jquery": "2.0.48",
     "@types/underscore": "1.8.0",
     "rollup": "1.11.3",
-    "typescript": "~3.4"
+    "typescript": "~3.4",
+    "tape": "^4.10.1",
+    "eslint": "^5.16.0"
   }
 }
