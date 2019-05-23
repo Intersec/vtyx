@@ -1,6 +1,6 @@
 {
   "name": "vtyx",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "VueJS 2.x with Typescript & JSX",
   "main": "dist/vtyx.common.js",
   "module": "dist/vtyx.esm.js",
