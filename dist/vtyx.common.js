@@ -11,30 +11,6 @@ var $ = _interopDefault(require('jquery'));
 var vuePropertyDecorator = require('vue-property-decorator');
 
 // tslint:disable:no-bitwise
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (undefined && undefined.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 /* {{{ Event modifiers */
 var EventModifiers;
 (function (EventModifiers) {
@@ -43,32 +19,26 @@ var EventModifiers;
     EventModifiers[EventModifiers["Stop"] = 4] = "Stop";
 })(EventModifiers || (EventModifiers = {}));
 function applyModifiers(cb, modifiers) {
-    return function (evt) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
+    return (evt, ...args) => {
         if (modifiers & EventModifiers.Prevent) {
             evt.preventDefault();
         }
         if (modifiers & EventModifiers.Stop) {
             evt.stopPropagation();
         }
-        cb.apply(void 0, [evt].concat(args));
+        cb(evt, ...args);
     };
 }
 function handleEventModifiers(events) {
-    var keys = Object.keys(events);
-    var newEvents = {};
-    for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-        var key = keys_1[_i];
-        var cb = events[key];
-        var elems = key.split('.');
-        var name_1 = elems.shift();
+    const keys = Object.keys(events);
+    const newEvents = {};
+    for (const key of keys) {
+        let cb = events[key];
+        const elems = key.split('.');
+        const name = elems.shift();
         if (elems.length > 0) {
-            var modifiers = EventModifiers.None;
-            for (var _a = 0, elems_1 = elems; _a < elems_1.length; _a++) {
-                var modifier = elems_1[_a];
+            let modifiers = EventModifiers.None;
+            for (const modifier of elems) {
                 switch (modifier) {
                     case 'prevent':
                         modifiers |= EventModifiers.Prevent;
@@ -82,7 +52,7 @@ function handleEventModifiers(events) {
             }
             cb = applyModifiers(cb, modifiers);
         }
-        newEvents[name_1] = cb;
+        newEvents[name] = cb;
     }
     return newEvents;
 }
@@ -105,26 +75,25 @@ function mustUseDomProps(tag, key, type) {
  * This function is responsible for this translation.
  */
 function linearData2VNodeData(inData, tag) {
-    var vData = {};
-    var keys = Object.keys(inData);
-    for (var _i = 0, keys_2 = keys; _i < keys_2.length; _i++) {
-        var key = keys_2[_i];
+    const vData = {};
+    const keys = Object.keys(inData);
+    for (const key of keys) {
         if (key === 'on') {
-            var value = inData[key];
+            const value = inData[key];
             if (vData.on === undefined) {
                 vData.on = {};
             }
-            vData.on = __assign({}, vData.on, handleEventModifiers(value));
+            vData.on = Object.assign({}, vData.on, handleEventModifiers(value));
         }
         else if (key.startsWith('on')) {
-            var cbKey = key.slice(2).toLowerCase();
+            const cbKey = key.slice(2).toLowerCase();
             if (vData.on === undefined) {
                 vData.on = {};
             }
             vData.on[cbKey] = inData[key];
         }
         else if (key === 'class') {
-            var value = inData[key];
+            const value = inData[key];
             if (typeof value === 'object') {
                 vData.class = value;
             }
@@ -143,7 +112,7 @@ function linearData2VNodeData(inData, tag) {
             if (!Array.isArray(vData.directives)) {
                 vData.directives = [];
             }
-            var directive = key.slice(2);
+            const directive = key.slice(2);
             /* XXX: arg and modifiers won't be used currently */
             vData.directives.push({
                 name: directive,
@@ -152,11 +121,11 @@ function linearData2VNodeData(inData, tag) {
         }
         else {
             if (mustUseDomProps(tag, key, inData.type)) {
-                var domProps = vData.domProps || (vData.domProps = {});
+                const domProps = vData.domProps || (vData.domProps = {});
                 domProps[key] = inData[key];
             }
             else {
-                var attrs = vData.attrs || (vData.attrs = {});
+                const attrs = vData.attrs || (vData.attrs = {});
                 attrs[key] = inData[key];
             }
         }
@@ -164,8 +133,7 @@ function linearData2VNodeData(inData, tag) {
     return vData;
 }
 /* }}} */
-var Vue = /** @class */ (function (_super) {
-    __extends(Vue, _super);
+class Vue extends _Vue {
     /* Spoof props as arguments of the constructor, so that the
      * class constructor can depend on props, meaning that the
      * generic inference of P can work when using the classes
@@ -181,26 +149,19 @@ var Vue = /** @class */ (function (_super) {
      * This is because Foo has the type of the constructor, so it needs to
      * depend on the types of the props to avoid infering {}.
      */
-    function Vue(_opts, _props) {
-        var _this = this;
-        return _this = _super.call(this, arguments) || this;
+    constructor(_opts, _props) {
+        return super(arguments);
     }
     /* Wrapper to convert raw JSX attributes to vnode data. */
-    Vue.prototype.renderWrapper = function () {
-        var _this = this;
-        return function (tag, data) {
-            var children = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                children[_i - 2] = arguments[_i];
-            }
-            var vnodeData = data !== null ? linearData2VNodeData(data, tag)
+    renderWrapper() {
+        return (tag, data, ...children) => {
+            const vnodeData = data !== null ? linearData2VNodeData(data, tag)
                 : {};
-            return _this.$createElement(tag, vnodeData, children);
+            return this.$createElement(tag, vnodeData, children);
         };
-    };
-    return Vue;
-}(_Vue));
-var Observer = (new _Vue()).$data.__ob__.constructor;
+    }
+}
+const Observer = (new _Vue()).$data.__ob__.constructor;
 /**
  * Modify the given object to set it as non reactive.
  * It adds a dummy observer on it, like this Vue thinks it is already
@@ -225,26 +186,26 @@ function setTooltip($tooltip, opts) {
         $tooltip.tooltip(opts);
     }
 }
-var directives = [{
+const directives = [{
         name: 'tooltip',
         directive: {
-            inserted: function (el, data) {
-                var value = data.value;
+            inserted: (el, data) => {
+                const value = data.value;
                 setTooltip($(el), value);
                 if (typeof value !== 'string' && value.hideOnClick) {
-                    el.addEventListener('click', function () {
+                    el.addEventListener('click', () => {
                         $(el).tooltip('hide');
                     }, false);
                 }
             },
-            update: function (el, data) {
-                var value = data.value;
-                var oldValue = data.oldValue;
+            update: (el, data) => {
+                const value = data.value;
+                const oldValue = data.oldValue;
                 if (_.isEqual(value, oldValue)) {
                     /* No change */
                     return;
                 }
-                var $tooltip = $(el);
+                const $tooltip = $(el);
                 $tooltip.off('hidden.bs.tooltip');
                 /**
                  * Bootstrap tooltip is not ready to display it with changing content.
@@ -253,9 +214,9 @@ var directives = [{
                  * To recreate a new tooltip it is needed to wait that the previous one
                  * has been fully removed.
                  */
-                $tooltip.one('hidden.bs.tooltip', function () {
+                $tooltip.one('hidden.bs.tooltip', () => {
                     /* wait for the full tooltip deletion */
-                    _.defer(function () {
+                    _.defer(() => {
                         setTooltip($tooltip, value);
                     });
                 });
@@ -269,24 +230,24 @@ var directives = [{
          * https://gihub.com/vuejs/vue/blob/dev/src/platforms/web/runtime/directives/show.js )
          */
         directive: {
-            bind: function (el, data) {
-                var value = data.value;
-                var originalVisibility = el.style.visibility === 'hidden' ? '' : el.style.visibility;
+            bind: (el, data) => {
+                const value = data.value;
+                const originalVisibility = el.style.visibility === 'hidden' ? '' : el.style.visibility;
                 if (originalVisibility !== null) {
                     el.dataset.vOriginalVisibility = originalVisibility;
                 }
                 el.style.visibility = value ? originalVisibility : 'hidden';
             },
-            update: function (el, data) {
-                var value = data.value;
-                var oldValue = data.oldValue;
+            update: (el, data) => {
+                const value = data.value;
+                const oldValue = data.oldValue;
                 if (value === oldValue) {
                     return;
                 }
-                var vOriginalVisibility = el.dataset.vOriginalVisibility || null;
+                const vOriginalVisibility = el.dataset.vOriginalVisibility || null;
                 el.style.visibility = value ? vOriginalVisibility : 'hidden';
             },
-            unbind: function (el) {
+            unbind: (el) => {
                 el.style.visibility = el.dataset.vOriginalVisibility || null;
             },
         },
@@ -295,8 +256,7 @@ var directives = [{
 /* }}} */
 function registerDirectives() {
     /* Register directives */
-    for (var _i = 0, directives_1 = directives; _i < directives_1.length; _i++) {
-        var d = directives_1[_i];
+    for (const d of directives) {
         Vue.directive(d.name, d.directive);
     }
 }
