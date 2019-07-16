@@ -1,6 +1,6 @@
 {
   "name": "vtyx",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "VueJS 2.x with Typescript & JSX",
   "main": "dist/vtyx.common.js",
   "module": "dist/vtyx.esm.js",
@@ -30,13 +30,13 @@
   },
   "peerDependencies": {
     "bootstrap": "3.3.7",
-    "underscore": "1.8.3",
+    "underscore": "^1.9.1",
     "jquery": ">=1.12.4"
   },
   "devDependencies": {
     "@types/bootstrap": "3.3",
-    "@types/jquery": "2.0.48",
-    "@types/underscore": "1.8.0",
+    "@types/jquery": "3.3.30",
+    "@types/underscore": "1.9.2",
     "rollup": "1.17.0",
     "typescript": "~3.5",
     "tape": "^4.11.0",
