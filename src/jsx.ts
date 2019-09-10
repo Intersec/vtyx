@@ -4,6 +4,7 @@ import { Tooltip, Visible } from './directives';
 
 export interface SyntheticEvent<T> {
     currentTarget: EventTarget & T;
+    target: EventTarget;
     preventDefault(): void;
     stopPropagation(): void;
 }
