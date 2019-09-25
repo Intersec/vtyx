@@ -47,6 +47,7 @@ export interface VueRenderAttributes {
     on?: VueRenderOnAttribute;
     key?: number | string;
     ref?: string;
+    slot?: string;
     'v-tooltip'?: Tooltip;
     'v-visible'?: Visible;
 }

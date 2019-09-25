@@ -178,3 +178,14 @@ tape.test('must handle v-show directive', (t) => {
 
     t.end();
 });
+
+tape.test('must handle slot name', (t) => {
+    const data = { slot: 'foo' };
+
+    const res = vtyx.linearData2VNodeData(data, 'div');
+    t.deepEqual(res, {
+        slot: 'foo',
+    });
+
+    t.end();
+});
