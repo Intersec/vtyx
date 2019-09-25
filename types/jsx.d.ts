@@ -1,4 +1,5 @@
 import { Tooltip, Visible } from './directives';
+import { VNodeData } from 'vue';
 export interface SyntheticEvent<T> {
     currentTarget: EventTarget & T;
     target: EventTarget;
@@ -48,6 +49,7 @@ export interface VueRenderAttributes {
     key?: number | string;
     ref?: string;
     slot?: string;
+    scopedSlots?: VNodeData['scopedSlots'];
     'v-tooltip'?: Tooltip;
     'v-visible'?: Visible;
 }

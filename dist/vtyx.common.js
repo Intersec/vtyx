@@ -122,6 +122,9 @@ function linearData2VNodeData(inData, tag) {
         else if (key === 'slot') {
             vData.slot = inData[key];
         }
+        else if (key === 'scopedSlots') {
+            vData.scopedSlots = inData[key];
+        }
         else {
             if (mustUseDomProps(tag, key, inData.type)) {
                 const domProps = vData.domProps || (vData.domProps = {});

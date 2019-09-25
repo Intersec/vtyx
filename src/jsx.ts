@@ -1,4 +1,5 @@
 import { Tooltip, Visible } from './directives';
+import { VNodeData } from 'vue';
 
 /* heavily copied from @types/react */
 
@@ -52,6 +53,8 @@ export interface VueRenderAttributes {
     key?: number | string;
     ref?: string;
     slot?: string;
+    /* XXX: Vue does not expose ScopedSlot, so we take it from VNodeData */
+    scopedSlots?: VNodeData['scopedSlots'];
 
     'v-tooltip'?: Tooltip;
     'v-visible'?: Visible;

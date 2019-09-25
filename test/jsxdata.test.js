@@ -189,3 +189,18 @@ tape.test('must handle slot name', (t) => {
 
     t.end();
 });
+
+tape.test('must handle scoped slots', (t) => {
+    const cb = () => {};
+    const data = {
+        scopedSlots: { default: cb },
+    };
+
+    const res = vtyx.linearData2VNodeData(data, 'div');
+
+    t.deepEqual(res, {
+        scopedSlots: { default: cb }
+    });
+
+    t.end();
+});
