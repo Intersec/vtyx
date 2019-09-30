@@ -2,7 +2,7 @@ export { default as Component } from 'vue-class-component';
 import _Vue from 'vue';
 import _ from 'underscore';
 import $ from 'jquery';
-export { Prop, Watch } from 'vue-property-decorator';
+export { Inject, Prop, Provide, Watch } from 'vue-property-decorator';
 
 // tslint:disable:no-bitwise
 /* {{{ Event modifiers */

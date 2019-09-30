@@ -268,10 +268,22 @@ function registerDirectives() {
 }
 
 exports.Component = vueClassComponent;
+Object.defineProperty(exports, 'Inject', {
+    enumerable: true,
+    get: function () {
+        return vuePropertyDecorator.Inject;
+    }
+});
 Object.defineProperty(exports, 'Prop', {
     enumerable: true,
     get: function () {
         return vuePropertyDecorator.Prop;
+    }
+});
+Object.defineProperty(exports, 'Provide', {
+    enumerable: true,
+    get: function () {
+        return vuePropertyDecorator.Provide;
     }
 });
 Object.defineProperty(exports, 'Watch', {

@@ -39,6 +39,6 @@ export default Vue;
 export {
     Component,
 };
-export { Prop, Watch } from 'vue-property-decorator';
+export { Prop, Watch, Inject, Provide } from 'vue-property-decorator';
 export * from './vue';
 export * from './jsx';
