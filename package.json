@@ -29,12 +29,12 @@
     "vue-property-decorator": "^8.2.2",
     "@types/bootstrap": "3.3",
     "@types/jquery": "3.3.31",
-    "@types/underscore": "1.9.3"
-  },
-  "peerDependencies": {
-    "bootstrap": "3.3.7",
+    "@types/underscore": "1.9.3",
     "underscore": "^1.9.1",
     "jquery": ">=1.12.4"
+  },
+  "peerDependencies": {
+    "bootstrap": "3.3.7"
   },
   "devDependencies": {
     "rollup": "1.22.0",
