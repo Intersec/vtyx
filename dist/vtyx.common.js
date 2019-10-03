@@ -83,7 +83,7 @@ function linearData2VNodeData(inData, tag) {
             if (vData.on === undefined) {
                 vData.on = {};
             }
-            vData.on = Object.assign({}, vData.on, handleEventModifiers(value));
+            vData.on = Object.assign(Object.assign({}, vData.on), handleEventModifiers(value));
         }
         else if (key.startsWith('on')) {
             const cbKey = key.slice(2).toLowerCase();
