@@ -26,7 +26,10 @@
   "dependencies": {
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
-    "vue-property-decorator": "^8.2.1"
+    "vue-property-decorator": "^8.2.1",
+    "@types/bootstrap": "3.3",
+    "@types/jquery": "3.3.30",
+    "@types/underscore": "1.9.2"
   },
   "peerDependencies": {
     "bootstrap": "3.3.7",
@@ -34,9 +37,6 @@
     "jquery": ">=1.12.4"
   },
   "devDependencies": {
-    "@types/bootstrap": "3.3",
-    "@types/jquery": "3.3.30",
-    "@types/underscore": "1.9.2",
     "rollup": "1.17.0",
     "typescript": "~3.5",
     "tape": "^4.11.0",
