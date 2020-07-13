@@ -1,6 +1,6 @@
 {
   "name": "vtyx",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "VueJS 2.x with Typescript & JSX",
   "main": "dist/vtyx.common.js",
   "module": "dist/vtyx.esm.js",
@@ -24,22 +24,22 @@
     "test:eslint": "eslint test/*"
   },
   "dependencies": {
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.1.0",
-    "vue-property-decorator": "^8.2.2",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^9.0.0",
     "@types/bootstrap": "3.3",
-    "@types/jquery": "3.3.31",
-    "@types/underscore": "1.9.3",
-    "underscore": "^1.9.1",
-    "jquery": ">=1.12.4"
+    "@types/jquery": "3.5.0",
+    "@types/underscore": "1.10.7",
+    "underscore": "^1.10.2",
+    "jquery": "^3.5.1"
   },
   "peerDependencies": {
     "bootstrap": "3.3.7"
   },
   "devDependencies": {
-    "rollup": "1.22.0",
-    "typescript": "~3.6",
-    "tape": "^4.11.0",
-    "eslint": "^6.5.1"
+    "rollup": "2.21.0",
+    "typescript": "~3.9",
+    "tape": "^5.0.1",
+    "eslint": "^7.4.0"
   }
 }

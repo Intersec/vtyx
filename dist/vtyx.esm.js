@@ -244,11 +244,11 @@ const directives = [{
                 if (value === oldValue) {
                     return;
                 }
-                const vOriginalVisibility = el.dataset.vOriginalVisibility || null;
+                const vOriginalVisibility = el.dataset.vOriginalVisibility || '';
                 el.style.visibility = value ? vOriginalVisibility : 'hidden';
             },
             unbind: (el) => {
-                el.style.visibility = el.dataset.vOriginalVisibility || null;
+                el.style.visibility = el.dataset.vOriginalVisibility || '';
             },
         },
     }];
