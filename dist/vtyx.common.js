@@ -2,11 +2,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var vueClassComponent = _interopDefault(require('vue-class-component'));
-var _Vue = _interopDefault(require('vue'));
+var vueClassComponent = require('vue-class-component');
+var _Vue = require('vue');
 var vuePropertyDecorator = require('vue-property-decorator');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var vueClassComponent__default = /*#__PURE__*/_interopDefaultLegacy(vueClassComponent);
+var _Vue__default = /*#__PURE__*/_interopDefaultLegacy(_Vue);
 
 // tslint:disable:no-bitwise
 /* {{{ Event modifiers */
@@ -137,7 +140,7 @@ function linearData2VNodeData(inData, tag) {
     return vData;
 }
 /* }}} */
-class Vue extends _Vue {
+class Vue extends _Vue__default['default'] {
     /* Spoof props as arguments of the constructor, so that the
      * class constructor can depend on props, meaning that the
      * generic inference of P can work when using the classes
@@ -165,7 +168,7 @@ class Vue extends _Vue {
         };
     }
 }
-const Observer = (new _Vue()).$data.__ob__.constructor;
+const Observer = (new _Vue__default['default']()).$data.__ob__.constructor;
 /**
  * Modify the given object to set it as non reactive.
  * It adds a dummy observer on it, like this Vue thinks it is already
@@ -216,7 +219,12 @@ function registerDirectives(directives) {
     }
 }
 
-exports.Component = vueClassComponent;
+Object.defineProperty(exports, 'Component', {
+    enumerable: true,
+    get: function () {
+        return vueClassComponent__default['default'];
+    }
+});
 Object.defineProperty(exports, 'Inject', {
     enumerable: true,
     get: function () {
