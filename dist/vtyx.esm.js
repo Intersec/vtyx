@@ -1,7 +1,5 @@
 export { default as Component } from 'vue-class-component';
 import _Vue from 'vue';
-import _ from 'underscore';
-import $ from 'jquery';
 export { Inject, Prop, Provide, Watch } from 'vue-property-decorator';
 
 // tslint:disable:no-bitwise
@@ -178,53 +176,7 @@ function nonReactive(value) {
 /** Purpose:
  * List all directives which should be register in VueJs.
  */
-function setTooltip($tooltip, opts) {
-    if (typeof opts === 'string') {
-        $tooltip.tooltip({ title: opts });
-    }
-    else {
-        $tooltip.tooltip(opts);
-    }
-}
 const directives = [{
-        name: 'tooltip',
-        directive: {
-            inserted: (el, data) => {
-                const value = data.value;
-                setTooltip($(el), value);
-                if (typeof value !== 'string' && value.hideOnClick) {
-                    el.addEventListener('click', () => {
-                        $(el).tooltip('hide');
-                    }, false);
-                }
-            },
-            update: (el, data) => {
-                const value = data.value;
-                const oldValue = data.oldValue;
-                if (_.isEqual(value, oldValue)) {
-                    /* No change */
-                    return;
-                }
-                const $tooltip = $(el);
-                $tooltip.off('hidden.bs.tooltip');
-                /**
-                 * Bootstrap tooltip is not ready to display it with changing content.
-                 * So each time content change it is needed to destroy the previous value
-                 * and to create a new tooltip.
-                 * To recreate a new tooltip it is needed to wait that the previous one
-                 * has been fully removed.
-                 */
-                $tooltip.one('hidden.bs.tooltip', () => {
-                    /* wait for the full tooltip deletion */
-                    _.defer(() => {
-                        setTooltip($tooltip, value);
-                    });
-                });
-                $tooltip.tooltip('destroy');
-                setTooltip($tooltip, value);
-            },
-        },
-    }, {
         name: 'visible',
         /* XXX: Could be improve to take into account transitions (see
          * https://gihub.com/vuejs/vue/blob/dev/src/platforms/web/runtime/directives/show.js )
@@ -252,14 +204,11 @@ const directives = [{
             },
         },
     }];
-
-/* }}} */
-function registerDirectives() {
-    /* Register directives */
+function registerDirectives(directives) {
     for (const d of directives) {
         Vue.directive(d.name, d.directive);
     }
 }
 
 export default Vue;
-export { Vue, linearData2VNodeData, nonReactive, registerDirectives };
+export { Vue, directives, linearData2VNodeData, nonReactive, registerDirectives };

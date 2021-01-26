@@ -15,9 +15,9 @@ declare global {
         }
     }
 }
-export declare function registerDirectives(): void;
 export default Vue;
 export { Component, };
 export { Prop, Watch, Inject, Provide } from 'vue-property-decorator';
+export * from './directives';
 export * from './vue';
 export * from './jsx';

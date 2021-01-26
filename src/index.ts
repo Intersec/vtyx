@@ -3,7 +3,6 @@ import Component from 'vue-class-component';
 
 import { IntrinsicElements as JsxIntrinsicElements } from './jsx';
 import { Vue } from './vue';
-import { directives } from './directives';
 
 /* {{{ JSX */
 
@@ -27,18 +26,12 @@ declare global {
 
 /* }}} */
 
-export function registerDirectives() {
-    /* Register directives */
-    for (const d of directives) {
-        Vue.directive(d.name, d.directive);
-    }
-}
-
 export default Vue;
 
 export {
     Component,
 };
 export { Prop, Watch, Inject, Provide } from 'vue-property-decorator';
+export * from './directives';
 export * from './vue';
 export * from './jsx';

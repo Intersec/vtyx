@@ -12,8 +12,5 @@ export default {
         'vue',
         'vue-class-component',
         'vue-property-decorator',
-        'underscore',
-        'jquery',
-        'bootstrap',
     ]
 }
