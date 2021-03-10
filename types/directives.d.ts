@@ -1,11 +1,11 @@
 /** Purpose:
  * List all directives which should be register in VueJs.
  */
-import { DirectiveOptions } from 'vue';
+import { App, ObjectDirective } from '@vue/runtime-core';
 export interface Directive {
     name: string;
-    directive: DirectiveOptions;
+    directive: ObjectDirective;
 }
 export declare type Visible = boolean;
 export declare const directives: Directive[];
-export declare function registerDirectives(directives: Directive[]): void;
+export declare function registerDirectives(app: App, ds: Directive[]): void;

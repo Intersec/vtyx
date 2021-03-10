@@ -1,8 +1,7 @@
-import { VNode } from 'vue';
-import Component from 'vue-class-component';
+import { VNode } from '@vue/runtime-core';
 
 import { IntrinsicElements as JsxIntrinsicElements } from './jsx';
-import { Vue } from './vue';
+import { h as _h, Vue } from './vue';
 
 /* {{{ JSX */
 
@@ -12,26 +11,26 @@ import { Vue } from './vue';
  *    the interface of the element.
  *  * Intrinsic elements are described in the 'jsx.ts' file.
  */
-
-declare global {
-    namespace JSX {
-        interface Element extends VNode {}
-        interface ElementClass extends Vue<any> {}
-        interface ElementAttributesProperty {
+export const h = _h;
+export namespace h {
+    export namespace JSX {
+        export interface Element extends VNode {}
+        export interface ElementClass extends Vue<any> {}
+        export interface ElementAttributesProperty {
             _jsxProps: {};
         }
-        interface IntrinsicElements extends JsxIntrinsicElements {}
+        export interface IntrinsicElements extends JsxIntrinsicElements {}
     }
 }
 
 /* }}} */
 
-export default Vue;
+const Component: <V>(v: V) => V = (v) => v;
 
 export {
     Component,
 };
-export { Prop, Watch, Inject, Provide } from 'vue-property-decorator';
+export { Prop, Model, Watch, Emit, Ref } from 'vue-property-decorator';
 export * from './directives';
-export * from './vue';
+export { Vue, nonReactive } from './vue';
 export * from './jsx';

@@ -9,7 +9,8 @@ export default {
         format: 'esm',
     }],
     external: [
-        'vue',
+        '@vue/runtime-core',
+        '@vue/reactivity',
         'vue-class-component',
         'vue-property-decorator',
     ]

@@ -4,12 +4,11 @@
 
 /* XXX: If adding a directive, its type should be added in ./jsx too */
 
-import { Vue } from './vue';
-import { VNodeDirective, DirectiveOptions } from 'vue';
+import { App, ObjectDirective, DirectiveBinding } from '@vue/runtime-core';
 
 export interface Directive {
     name: string;
-    directive: DirectiveOptions;
+    directive: ObjectDirective;
 }
 
 export type Visible = boolean;
@@ -20,7 +19,7 @@ export const directives: Directive[] = [{
      * https://gihub.com/vuejs/vue/blob/dev/src/platforms/web/runtime/directives/show.js )
      */
     directive: {
-        bind: (el: HTMLElement, data: VNodeDirective) => {
+        beforeMount: (el: HTMLElement, data: DirectiveBinding) => {
             const value = data.value as Visible;
 
             const originalVisibility =
@@ -30,7 +29,7 @@ export const directives: Directive[] = [{
             }
             el.style.visibility = value ? originalVisibility : 'hidden';
         },
-        update: (el: HTMLElement, data: VNodeDirective) => {
+        updated: (el: HTMLElement, data: DirectiveBinding) => {
             const value = data.value as Visible;
             const oldValue = data.oldValue as Visible;
 
@@ -40,14 +39,14 @@ export const directives: Directive[] = [{
             const vOriginalVisibility = el.dataset.vOriginalVisibility || '';
             el.style.visibility = value ? vOriginalVisibility : 'hidden';
         },
-        unbind: (el: HTMLElement) => {
+        unmounted: (el: HTMLElement) => {
             el.style.visibility = el.dataset.vOriginalVisibility || '';
         },
     },
 }];
 
-export function registerDirectives(directives: Directive[]) {
-    for (const d of directives) {
-        Vue.directive(d.name, d.directive);
+export function registerDirectives(app: App, ds: Directive[]) {
+    for (const d of ds) {
+        app.directive(d.name, d.directive);
     }
 }

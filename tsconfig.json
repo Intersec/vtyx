@@ -19,7 +19,16 @@
         "noImplicitThis": true,
         "noEmitOnError": true,
 
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+
+        "jsx": "react",
+        "jsxFactory": "h",
+
+        "lib": [
+            "dom",
+            "esnext"
+        ]
     },
     "include": [
         "src/**/*.ts"

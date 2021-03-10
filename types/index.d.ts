@@ -1,8 +1,8 @@
-import { VNode } from 'vue';
-import Component from 'vue-class-component';
+import { VNode } from '@vue/runtime-core';
 import { IntrinsicElements as JsxIntrinsicElements } from './jsx';
-import { Vue } from './vue';
-declare global {
+import { h as _h, Vue } from './vue';
+export declare const h: typeof _h;
+export declare namespace h {
     namespace JSX {
         interface Element extends VNode {
         }
@@ -15,9 +15,9 @@ declare global {
         }
     }
 }
-export default Vue;
+declare const Component: <V>(v: V) => V;
 export { Component, };
-export { Prop, Watch, Inject, Provide } from 'vue-property-decorator';
+export { Prop, Model, Watch, Emit, Ref } from 'vue-property-decorator';
 export * from './directives';
-export * from './vue';
+export { Vue, nonReactive } from './vue';
 export * from './jsx';
