@@ -131,17 +131,22 @@ export function linearData2VNodeData(inData: RenderAttributes, tag: string) {
             vData.key = inData[key];
         } else
         if (key.startsWith('v-')) {
-            if (!Array.isArray(vData.directives)) {
-                vData.directives = [];
-            }
-
             const directive = key.slice(2);
 
-            /* XXX: arg and modifiers won't be used currently */
-            vData.directives.push({
-                name: directive,
-                value: inData[key],
-            } as VNodeDirective);
+            if (directive === 'html') {
+                const domProps = vData.domProps || (vData.domProps = {});
+                domProps.innerHTML = inData[key];
+            } else {
+                if (!Array.isArray(vData.directives)) {
+                    vData.directives = [];
+                }
+
+                /* XXX: arg and modifiers won't be used currently */
+                vData.directives.push({
+                    name: directive,
+                    value: inData[key],
+                } as VNodeDirective);
+            }
         } else
         if (key === 'slot') {
             vData.slot = inData[key];

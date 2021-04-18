@@ -204,3 +204,16 @@ tape.test('must handle scoped slots', (t) => {
 
     t.end();
 });
+
+tape.test('must handle v-html directive', (t) => {
+    const data = { 'v-html': '<span>test</span>' };
+
+    const res = vtyx.linearData2VNodeData(data, 'span');
+    t.deepEqual(res, {
+        domProps: {
+            innerHTML: '<span>test</span>'
+        }
+    });
+
+    t.end();
+});
