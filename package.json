@@ -1,7 +1,7 @@
 {
   "name": "vtyx",
-  "version": "3.1.0",
-  "description": "VueJS 2.x with Typescript & JSX",
+  "version": "4.0.0",
+  "description": "VueJS 3.x with Typescript & JSX",
   "main": "dist/vtyx.common.js",
   "module": "dist/vtyx.esm.js",
   "types": "types/index.d.ts",
