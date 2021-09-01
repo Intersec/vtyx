@@ -6,6 +6,7 @@ var runtimeCore = require('@vue/runtime-core');
 var reactivity = require('@vue/reactivity');
 var vueClassComponent = require('vue-class-component');
 var vuePropertyDecorator = require('vue-property-decorator');
+var vue = require('vue');
 
 // tslint:disable:no-bitwise
 /* {{{ Event modifiers */
@@ -79,7 +80,6 @@ function hArgV2ToV3(inData) {
 function h(type, props, ...args) {
     return runtimeCore.h(type, props ? hArgV2ToV3(props) : props, ...args);
 }
-/* }}} */
 class Vue extends vueClassComponent.Vue {
     /* Spoof props as arguments of the constructor, so that the
      * class constructor can depend on props, meaning that the
@@ -164,6 +164,12 @@ Object.defineProperty(exports, 'Emit', {
         return vuePropertyDecorator.Emit;
     }
 });
+Object.defineProperty(exports, 'Inject', {
+    enumerable: true,
+    get: function () {
+        return vuePropertyDecorator.Inject;
+    }
+});
 Object.defineProperty(exports, 'Model', {
     enumerable: true,
     get: function () {
@@ -176,6 +182,12 @@ Object.defineProperty(exports, 'Prop', {
         return vuePropertyDecorator.Prop;
     }
 });
+Object.defineProperty(exports, 'Provide', {
+    enumerable: true,
+    get: function () {
+        return vuePropertyDecorator.Provide;
+    }
+});
 Object.defineProperty(exports, 'Ref', {
     enumerable: true,
     get: function () {
@@ -186,6 +198,12 @@ Object.defineProperty(exports, 'Watch', {
     enumerable: true,
     get: function () {
         return vuePropertyDecorator.Watch;
+    }
+});
+Object.defineProperty(exports, 'createApp', {
+    enumerable: true,
+    get: function () {
+        return vue.createApp;
     }
 });
 exports.Component = Component;

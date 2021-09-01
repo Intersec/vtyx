@@ -1,7 +1,8 @@
 import { h as h$2 } from '@vue/runtime-core';
 import { markRaw } from '@vue/reactivity';
 import { Vue as Vue$1 } from 'vue-class-component';
-export { Emit, Model, Prop, Ref, Watch } from 'vue-property-decorator';
+export { Emit, Inject, Model, Prop, Provide, Ref, Watch } from 'vue-property-decorator';
+export { createApp } from 'vue';
 
 // tslint:disable:no-bitwise
 /* {{{ Event modifiers */
@@ -75,7 +76,6 @@ function hArgV2ToV3(inData) {
 function h(type, props, ...args) {
     return h$2(type, props ? hArgV2ToV3(props) : props, ...args);
 }
-/* }}} */
 class Vue extends Vue$1 {
     /* Spoof props as arguments of the constructor, so that the
      * class constructor can depend on props, meaning that the

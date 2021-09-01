@@ -30,7 +30,8 @@ const Component: <V>(v: V) => V = (v) => v;
 export {
     Component,
 };
-export { Prop, Model, Watch, Emit, Ref } from 'vue-property-decorator';
+export { Prop, Model, Watch, Emit, Ref, Inject, Provide } from 'vue-property-decorator';
 export * from './directives';
-export { Vue, nonReactive } from './vue';
+export { Vue, nonReactive, VueConstructor } from './vue';
+export { createApp } from 'vue';
 export * from './jsx';

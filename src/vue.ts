@@ -98,6 +98,8 @@ export function h(type: any, props?: any, ...args: any[]) {
 
 /* }}} */
 
+export { VueConstructor } from 'vue-class-component';
+
 export class Vue<P extends {}> extends _Vue {
     /* Add a dummy field to type the component in JSX.
      * This field does not actually exist, and is only used in Typescript. */
