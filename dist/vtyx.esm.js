@@ -73,7 +73,7 @@ function hArgV2ToV3(inData) {
     }
     return vData;
 }
-function h(type, props, ...args) {
+function h$1(type, props, ...args) {
     return h$2(type, props ? hArgV2ToV3(props) : props, ...args);
 }
 class Vue extends Vue$1 {
@@ -150,8 +150,8 @@ function registerDirectives(app, ds) {
  *    the interface of the element.
  *  * Intrinsic elements are described in the 'jsx.ts' file.
  */
-const h$1 = h;
+const h = h$1;
 /* }}} */
 const Component = (v) => v;
 
-export { Component, Vue, directives, h$1 as h, nonReactive, registerDirectives };
+export { Component, Vue, directives, h, nonReactive, registerDirectives };
