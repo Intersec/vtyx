@@ -73,8 +73,45 @@ function hArgV2ToV3(inData) {
     }
     return vData;
 }
+function vNodeSlot(type, props, args = []) {
+    if (props && Reflect.has(props, 'slot')) {
+        /* In Vue3, children in slots should be given from a function.
+         * So instead returning a VNode it should be an object with the slot
+         * name as attribute and a function returning the VNode as value */
+        const slot = props['slot'];
+        const vNode = {
+            [slot]: () => h$2(type, hArgV2ToV3(props), ...args),
+        };
+        /* XXX: fake the type to simplify TS usage, but this format is
+         * correctly supported by Vue3 */
+        return vNode;
+    }
+    return;
+}
+function cleanArgs(type, args) {
+    if ((type === null || type === void 0 ? void 0 : type.prototype) instanceof Vue && args.length) {
+        return args.reduce((argList, arg) => {
+            /* Remove values like false, null or undefined which are not VNode */
+            if (!arg) {
+                return argList;
+            }
+            /* flat any array but also apply the same check on each value */
+            if (Array.isArray(arg)) {
+                const list = cleanArgs(type, arg);
+                argList.push(...list);
+                return argList;
+            }
+            argList.push(arg);
+            return argList;
+        }, []);
+    }
+    return args;
+}
 function h$1(type, props, ...args) {
-    return h$2(type, props ? hArgV2ToV3(props) : props, ...args);
+    var _a;
+    const hProps = props ? hArgV2ToV3(props) : props;
+    const hArgs = cleanArgs(type, args);
+    return (_a = vNodeSlot(type, hProps, hArgs)) !== null && _a !== void 0 ? _a : h$2(type, hProps, ...hArgs);
 }
 class Vue extends Vue$1 {
     /* Spoof props as arguments of the constructor, so that the
