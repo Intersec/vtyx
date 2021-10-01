@@ -1,6 +1,7 @@
 import { Vue as _Vue } from 'vue-class-component';
 import { VueRenderAttributes } from './jsx';
-export declare function h(type: any, props?: any, ...args: any[]): import("@vue/runtime-core").VNode<import("@vue/runtime-core").RendererNode, import("@vue/runtime-core").RendererElement, {
+import { VNode } from 'vue';
+export declare function h(type: any, props?: any, ...args: any[]): VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
 }>;
 export { VueConstructor } from 'vue-class-component';

@@ -7,6 +7,7 @@ import {
     SyntheticEvent,
     VueRenderAttributes,
 } from './jsx';
+import { VNode } from 'vue';
 
 /* {{{ Render wrapper */
 
@@ -92,8 +93,28 @@ function hArgV2ToV3(inData: RenderAttributes) {
     return vData;
 }
 
+function vNodeSlot(type: any, props?: any, args: any[] = []): VNode | undefined {
+    if (props && Reflect.has(props, 'slot')) {
+        /* In Vue3, children in slots should be given from a function.
+         * So instead returning a VNode it should be an object with the slot
+         * name as attribute and a function returning the VNode as value */
+        const slot = props['slot'];
+        const vNode = {
+            [slot]: () => _h(type, hArgV2ToV3(props), ...args),
+        };
+
+        /* XXX: fake the type to simplify TS usage, but this format is
+         * correctly supported by Vue3 */
+        return vNode as unknown as VNode;
+    }
+
+    return;
+}
+
 export function h(type: any, props?: any, ...args: any[]) {
-    return _h(type, props ? hArgV2ToV3(props) : props, ...args);
+    const hProps = props ? hArgV2ToV3(props) : props;
+
+    return vNodeSlot(type, hProps, args) ?? _h(type, hProps, ...args);
 }
 
 /* }}} */
