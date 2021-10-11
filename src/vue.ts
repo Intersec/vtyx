@@ -111,10 +111,34 @@ function vNodeSlot(type: any, props?: any, args: any[] = []): VNode | undefined 
     return;
 }
 
+function cleanArgs<T = any>(type: any, args: T[]): T[] {
+    if (type?.prototype instanceof Vue && args.length) {
+        return args.reduce((argList, arg) => {
+            /* Remove values like false, null or undefined which are not VNode */
+            if (!arg) {
+                return argList;
+            }
+
+            /* flat any array but also apply the same check on each value */
+            if (Array.isArray(arg)) {
+                const list = cleanArgs(type, arg);
+                argList.push(...list);
+                return argList;
+            }
+
+            argList.push(arg);
+            return argList;
+        }, [] as T[]);
+    }
+
+    return args;
+}
+
 export function h(type: any, props?: any, ...args: any[]) {
     const hProps = props ? hArgV2ToV3(props) : props;
+    const hArgs = cleanArgs(type, args);
 
-    return vNodeSlot(type, hProps, args) ?? _h(type, hProps, ...args);
+    return vNodeSlot(type, hProps, hArgs) ?? _h(type, hProps, ...hArgs);
 }
 
 /* }}} */
