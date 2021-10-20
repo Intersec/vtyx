@@ -1,13 +1,19 @@
 // tslint:disable:no-bitwise
 
-import { h as _h } from '@vue/runtime-core';
+import { h as _h, withDirectives } from '@vue/runtime-core';
 import { markRaw } from '@vue/reactivity';
 import { Vue as _Vue } from 'vue-class-component';
 import {
     SyntheticEvent,
     VueRenderAttributes,
 } from './jsx';
-import { VNode } from 'vue';
+import { Directive, resolveDirective, VNode } from 'vue';
+
+type DirectiveArgs = [Directive, any, string, Record<string, boolean>];
+interface V3HArgs {
+    props: Record<string, any>;
+    directives?: DirectiveArgs[];
+}
 
 /* {{{ Render wrapper */
 
@@ -71,12 +77,39 @@ function handleEventModifiers(cb: (...args: unknown[]) => unknown, elems: string
  *
  * This function is responsible for this translation.
  */
-function hArgV2ToV3(inData: RenderAttributes) {
+function hArgV2ToV3(inData: RenderAttributes): V3HArgs {
     const vData: Record<string, any> = {};
     const keys = Object.keys(inData);
+    const directives: DirectiveArgs[] = [];
 
     for (const key of keys) {
-        if (key === 'on') {
+        if (key.startsWith('v-')) {
+            /* Manage directives */
+
+            const value = inData[key];
+            const [,directiveName, directiveArg = '', strModifiers = ''] =
+                key.match(/^v-([^:.]+)(?::([^.]+))?((?:\.[^.]+)*)$/) || [];
+            /* if directive is not set Vue will display a warning if
+             * configuration allowed it */
+            const directive = resolveDirective(directiveName);
+            const modifiers = strModifiers.split('.').reduce((mods, val) => {
+                if (val) {
+                    mods[val] = true;
+                }
+                return mods;
+            }, {} as Record<string, boolean>);
+
+            if (directive) {
+                directives.push([
+                    directive,
+                    value,
+                    directiveArg,
+                    modifiers,
+                ]);
+            }
+        } else if (key === 'on') {
+            /*  Manage events */
+
             const value = inData[key]!;
 
             for (const [onKey, onVal] of Object.entries(value)) {
@@ -90,17 +123,20 @@ function hArgV2ToV3(inData: RenderAttributes) {
         }
     }
 
-    return vData;
+    return {
+        props: vData,
+        directives,
+    };
 }
 
-function vNodeSlot(type: any, props?: any, args: any[] = []): VNode | undefined {
+function buildVNode(type: any, props?: any, args: any[] = []): VNode {
     if (props && Reflect.has(props, 'slot')) {
         /* In Vue3, children in slots should be given from a function.
          * So instead returning a VNode it should be an object with the slot
          * name as attribute and a function returning the VNode as value */
         const slot = props['slot'];
         const vNode = {
-            [slot]: () => _h(type, hArgV2ToV3(props), ...args),
+            [slot]: () => _h(type, props, ...args),
         };
 
         /* XXX: fake the type to simplify TS usage, but this format is
@@ -108,7 +144,8 @@ function vNodeSlot(type: any, props?: any, args: any[] = []): VNode | undefined 
         return vNode as unknown as VNode;
     }
 
-    return;
+    /* This is a normal vNode */
+    return _h(type, props, ...args);
 }
 
 function cleanArgs<T = any>(type: any, args: T[]): T[] {
@@ -135,10 +172,15 @@ function cleanArgs<T = any>(type: any, args: T[]): T[] {
 }
 
 export function h(type: any, props?: any, ...args: any[]) {
-    const hProps = props ? hArgV2ToV3(props) : props;
+    const {props: hProps, directives}: V3HArgs = props ? hArgV2ToV3(props) : { props };
     const hArgs = cleanArgs(type, args);
 
-    return vNodeSlot(type, hProps, hArgs) ?? _h(type, hProps, ...hArgs);
+    const vNode = buildVNode(type, hProps, hArgs);
+    if (directives) {
+        return withDirectives(vNode, directives);
+    } else {
+        return vNode;
+    }
 }
 
 /* }}} */
