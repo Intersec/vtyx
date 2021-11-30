@@ -3,56 +3,51 @@ const vtyx = require('..');
 
 /* Test conversions from plain data to VNode data structure of Vue 2.X */
 
-tape.test('must keep "on" object', (t) => {
-    const data = { on: { 'click': () => {} } };
-    const res = vtyx.linearData2VNodeData(data, 'span');
+tape.test('must transform "on" event in "onFoo"', (t) => {
+    const f = () => {};
+    const data = { on: { 'click': f } };
+    const res = vtyx.h('span', data);
 
-    t.deepEqual(res, data);
+    t.deepEqual(res.props, { onClick: f });
     t.end();
 });
 
-tape.test('must put "onFoo" key in "on" object', (t) => {
+tape.test('must keep "onFoo" object', (t) => {
     const cb = () => {};
     const data = { 'onClick': cb, 'onFoo': cb };
-    const res = vtyx.linearData2VNodeData(data, 'span');
+    const res = vtyx.h('span', data);
 
-    t.deepEqual(res, {
-        'on': {
-            'click': cb,
-            'foo': cb,
-        }
+    t.deepEqual(res.props, {
+        'onClick': cb,
+        'onFoo': cb,
     });
     t.end();
 });
 
 tape.test('must handle both "onFoo" and "on" keys together', (t) => {
     const cb = () => {};
-    let res = vtyx.linearData2VNodeData({
+    let res = vtyx.h('span', {
         'onClick': cb,
         'on': { 'foo': cb },
         'onBar': cb
-    }, 'span');
-
-    t.deepEqual(res, {
-        'on': {
-            'click': cb,
-            'foo': cb,
-            'bar': cb
-        }
     });
 
-    res = vtyx.linearData2VNodeData({
+    t.deepEqual(res.props, {
+        'onClick': cb,
+        'onFoo': cb,
+        'onBar': cb,
+    });
+
+    res = vtyx.h('span', {
         'on': { 'foo': cb },
         'onClick': cb,
-        'onBar': cb
-    }, 'span');
+        'onBar': cb,
+    });
 
-    t.deepEqual(res, {
-        'on': {
-            'foo': cb,
-            'click': cb,
-            'bar': cb
-        }
+    t.deepEqual(res.props, {
+        'onFoo': cb,
+        'onClick': cb,
+        'onBar': cb,
     });
     t.end();
 });
@@ -69,14 +64,14 @@ tape.test('must handle prevent', (t) => {
     const cb = spy();
     const data = { on: { 'click.prevent': cb } };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
+    const res = vtyx.h('span', data);
 
-    t.ok(res.on.click);
+    t.ok(res.props.onClick);
 
     let prevented = false;
     const evt = { 'preventDefault': () => prevented = true };
 
-    res.on.click(evt);
+    res.props.onClick(evt);
     t.ok(prevented);
     t.equal(cb.data.clicked, 1);
 
@@ -87,12 +82,12 @@ tape.test('must handle stop', (t) => {
     const cb = spy();
     const data = { on: { 'click.stop': cb } };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
-    t.ok(res.on.click);
+    const res = vtyx.h('span', data);
+    t.ok(res.props.onClick);
 
     let stopped = false;
     const evt = { 'stopPropagation': () => stopped = true };
-    res.on.click(evt);
+    res.props.onClick(evt);
 
     t.ok(stopped);
     t.equal(cb.data.clicked, 1);
@@ -104,8 +99,8 @@ tape.test('must handle multiple modifiers', (t) => {
     const cb = spy();
     const data = { on: { 'click.stop.prevent': cb } };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
-    t.ok(res.on.click);
+    const res = vtyx.h('span', data);
+    t.ok(res.props.onClick);
 
     let stopped = false;
     let prevented = false;
@@ -113,7 +108,7 @@ tape.test('must handle multiple modifiers', (t) => {
         'stopPropagation': () => stopped = true,
         'preventDefault': () => prevented = true
     };
-    res.on.click(evt);
+    res.props.onClick(evt);
 
     t.ok(stopped);
     t.ok(prevented);
@@ -126,7 +121,7 @@ tape.test('must throw on unknown modifier', (t) => {
     const data = { on: { 'click.foo': () => {} } };
 
     t.throws(
-        () => vtyx.linearData2VNodeData(data, 'span'),
+        () => vtyx.h('span', data),
         /unknown event modifier: foo/
     );
     t.end();
@@ -135,20 +130,21 @@ tape.test('must throw on unknown modifier', (t) => {
 tape.test('for input', (t) => {
     const data = { value: 'a', style: 'b' };
 
-    let res = vtyx.linearData2VNodeData(data, 'span');
-    t.deepEqual(res, {
-        attrs: { value: 'a', style: 'b' }
+    let res = vtyx.h('span', data);
+    t.deepEqual(res.props, {
+        value: 'a',
+        style: 'b',
     });
 
-    res = vtyx.linearData2VNodeData(data, 'input');
-    t.deepEqual(res, {
-        attrs: { style: 'b' },
-        domProps: { value: 'a' }
+    res = vtyx.h('input', data);
+    t.deepEqual(res.props, {
+        style: 'b',
+        value: 'a',
     });
 
-    res = vtyx.linearData2VNodeData({ checked: true }, 'input');
-    t.deepEqual(res, {
-        domProps: { checked: true }
+    res = vtyx.h('input', { checked: true });
+    t.deepEqual(res.props, {
+        checked: true,
     });
 
     t.end();
@@ -157,33 +153,30 @@ tape.test('for input', (t) => {
 tape.test('must handle "key" special attribute', (t) => {
     const data = { key: '1' };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
-    t.deepEqual(res, {
+    const res = vtyx.h('span', data);
+    t.deepEqual(res.props, {
         key: '1'
     });
 
     t.end();
 });
 
-tape.test('must handle v-show directive', (t) => {
+tape.test('must handle v-show directive differently', (t) => {
     const data = { 'v-show': true };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
-    t.deepEqual(res, {
-        directives: [{
-            name: 'show',
-            value: true,
-        }]
+    const res = vtyx.h('span', data);
+    t.notDeepEqual(res.props, {
+        'v-show': true,
     });
 
     t.end();
 });
 
-tape.test('must handle slot name', (t) => {
+tape.test('must handle slot name differently', (t) => {
     const data = { slot: 'foo' };
 
-    const res = vtyx.linearData2VNodeData(data, 'div');
-    t.deepEqual(res, {
+    const res = vtyx.h('div', data);
+    t.notDeepEqual(res.props, {
         slot: 'foo',
     });
 
@@ -196,23 +189,21 @@ tape.test('must handle scoped slots', (t) => {
         scopedSlots: { default: cb },
     };
 
-    const res = vtyx.linearData2VNodeData(data, 'div');
+    const res = vtyx.h('div', data);
 
-    t.deepEqual(res, {
+    t.deepEqual(res.props, {
         scopedSlots: { default: cb }
     });
 
     t.end();
 });
 
-tape.test('must handle v-html directive', (t) => {
+tape.test('must handle v-html directive differently', (t) => {
     const data = { 'v-html': '<span>test</span>' };
 
-    const res = vtyx.linearData2VNodeData(data, 'span');
-    t.deepEqual(res, {
-        domProps: {
-            innerHTML: '<span>test</span>'
-        }
+    const res = vtyx.h('span', data);
+    t.notDeepEqual(res.props, {
+        'v-html': '<span>test</span>'
     });
 
     t.end();
