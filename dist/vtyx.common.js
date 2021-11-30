@@ -5,8 +5,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var runtimeCore = require('@vue/runtime-core');
 var reactivity = require('@vue/reactivity');
 var vueClassComponent = require('vue-class-component');
-var vuePropertyDecorator = require('vue-property-decorator');
 var vue = require('vue');
+var vuePropertyDecorator = require('vue-property-decorator');
 
 // tslint:disable:no-bitwise
 /* {{{ Event modifiers */
@@ -61,8 +61,32 @@ function handleEventModifiers(cb, elems) {
 function hArgV2ToV3(inData) {
     const vData = {};
     const keys = Object.keys(inData);
+    const directives = [];
     for (const key of keys) {
-        if (key === 'on') {
+        if (key.startsWith('v-')) {
+            /* Manage directives */
+            const value = inData[key];
+            const [, directiveName, directiveArg = '', strModifiers = ''] = key.match(/^v-([^:.]+)(?::([^.]+))?((?:\.[^.]+)*)$/) || [];
+            /* if directive is not set Vue will display a warning if
+             * configuration allowed it */
+            const directive = vue.resolveDirective(directiveName);
+            const modifiers = strModifiers.split('.').reduce((mods, val) => {
+                if (val) {
+                    mods[val] = true;
+                }
+                return mods;
+            }, {});
+            if (directive) {
+                directives.push([
+                    directive,
+                    value,
+                    directiveArg,
+                    modifiers,
+                ]);
+            }
+        }
+        else if (key === 'on') {
+            /*  Manage events */
             const value = inData[key];
             for (const [onKey, onVal] of Object.entries(value)) {
                 const elems = onKey.split('.');
@@ -75,22 +99,26 @@ function hArgV2ToV3(inData) {
             vData[key] = inData[key];
         }
     }
-    return vData;
+    return {
+        props: vData,
+        directives,
+    };
 }
-function vNodeSlot(type, props, args = []) {
+function buildVNode(type, props, args = []) {
     if (props && Reflect.has(props, 'slot')) {
         /* In Vue3, children in slots should be given from a function.
          * So instead returning a VNode it should be an object with the slot
          * name as attribute and a function returning the VNode as value */
         const slot = props['slot'];
         const vNode = {
-            [slot]: () => runtimeCore.h(type, hArgV2ToV3(props), ...args),
+            [slot]: () => runtimeCore.h(type, props, ...args),
         };
         /* XXX: fake the type to simplify TS usage, but this format is
          * correctly supported by Vue3 */
         return vNode;
     }
-    return;
+    /* This is a normal vNode */
+    return runtimeCore.h(type, props, ...args);
 }
 function cleanArgs(type, args) {
     if ((type === null || type === void 0 ? void 0 : type.prototype) instanceof Vue && args.length) {
@@ -112,10 +140,15 @@ function cleanArgs(type, args) {
     return args;
 }
 function h$1(type, props, ...args) {
-    var _a;
-    const hProps = props ? hArgV2ToV3(props) : props;
+    const { props: hProps, directives } = props ? hArgV2ToV3(props) : { props };
     const hArgs = cleanArgs(type, args);
-    return (_a = vNodeSlot(type, hProps, hArgs)) !== null && _a !== void 0 ? _a : runtimeCore.h(type, hProps, ...hArgs);
+    const vNode = buildVNode(type, hProps, hArgs);
+    if (directives) {
+        return runtimeCore.withDirectives(vNode, directives);
+    }
+    else {
+        return vNode;
+    }
 }
 class Vue extends vueClassComponent.Vue {
     /* Spoof props as arguments of the constructor, so that the
@@ -195,6 +228,12 @@ const h = h$1;
 /* }}} */
 const Component = (v) => v;
 
+Object.defineProperty(exports, 'createApp', {
+    enumerable: true,
+    get: function () {
+        return vue.createApp;
+    }
+});
 Object.defineProperty(exports, 'Emit', {
     enumerable: true,
     get: function () {
@@ -235,12 +274,6 @@ Object.defineProperty(exports, 'Watch', {
     enumerable: true,
     get: function () {
         return vuePropertyDecorator.Watch;
-    }
-});
-Object.defineProperty(exports, 'createApp', {
-    enumerable: true,
-    get: function () {
-        return vue.createApp;
     }
 });
 exports.Component = Component;
