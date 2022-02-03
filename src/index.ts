@@ -25,12 +25,7 @@ export namespace h {
 
 /* }}} */
 
-const Component: <V>(v: V) => V = (v) => v;
-
-export {
-    Component,
-};
-export { Prop, Model, Watch, Emit, Ref, Inject, Provide } from 'vue-property-decorator';
+export * from './decorators';
 export * from './directives';
 export { Vue, nonReactive, VueConstructor } from './vue';
 export { createApp } from 'vue';

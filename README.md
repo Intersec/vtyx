@@ -21,20 +21,20 @@ can be written in JSX, enabling type checking.
 ### Example
 
 ```js
-import { Vue, Prop } from 'vtyx';
+import { Vue, Prop, Component, Emits, h /* (1) */ } from 'vtyx';
 
 interface ChildProps {
     title: string;
 }
 
-// (1)
+// (2)
+@Component
 class Child extends Vue<ChildProps> {
     @Prop()
     title: string;
 
+    @Emits(['click'])
     render() {
-        const h = this.renderWrapper(); // (2)
-
         return (
           // type checking on intrinsic elements
           <a
@@ -47,12 +47,11 @@ class Child extends Vue<ChildProps> {
     }
 }
 
+@Component
 class Parent extends Vue<{}> {
     hide = false;
 
     render() {
-        const h = this.renderWrapper(); // (2)
-
         return (
           <Child
             class={['c1', { 'c2': true, 'c3': false }]}
@@ -68,11 +67,11 @@ class Parent extends Vue<{}> {
 }
 ```
 
-* (1) See [vue-class-component](https://github.com/vuejs/vue-class-component)
+* (1) A "render wrapper" is required to transform the JSX arguments into the complex arguments
+      of vue's createElement function.
+* (2) See [vue-class-component](https://github.com/vuejs/vue-class-component)
       and [vue-property-decorators](https://github.com/kaorun343/vue-property-decorator)
       for the class syntax.
-* (2) A "render wrapper" is required to transfrom the JSX arguments into the complex arguments
-      of vue's createElement function.
 
 ### Features
 
