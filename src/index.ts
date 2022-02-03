@@ -35,3 +35,4 @@ export * from './directives';
 export { Vue, nonReactive, VueConstructor } from './vue';
 export { createApp } from 'vue';
 export * from './jsx';
+export { mixins } from 'vue-class-component';
