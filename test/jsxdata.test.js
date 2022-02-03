@@ -198,12 +198,12 @@ tape.test('must handle scoped slots', (t) => {
     t.end();
 });
 
-tape.test('must handle v-html directive differently', (t) => {
+tape.test('must handle v-html directive', (t) => {
     const data = { 'v-html': '<span>test</span>' };
 
     const res = vtyx.h('span', data);
-    t.notDeepEqual(res.props, {
-        'v-html': '<span>test</span>'
+    t.deepEqual(res.props, {
+        'innerHTML': '<span>test</span>'
     });
 
     t.end();

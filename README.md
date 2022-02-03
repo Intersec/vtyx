@@ -84,7 +84,7 @@ class Parent extends Vue<{}> {
 * `class`, `key` and `ref` are handled. See
   [The Vue documentation](https://v3.vuejs.org/guide/component-attrs.html#attribute-inheritance)
   for more details.
-* A few directives are available: `v-visible`.
+* A few directives are available: `v-visible` and `v-html`.
 * no `v-model` or `v-bind`
 * Some additional features available in the
   [createElement API](https://v3.vuejs.org/guide/render-function.html#creating-component-vnodes)

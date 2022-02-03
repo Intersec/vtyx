@@ -89,23 +89,31 @@ function hArgV2ToV3(inData: RenderAttributes): V3HArgs {
             const value = inData[key];
             const [,directiveName, directiveArg = '', strModifiers = ''] =
                 key.match(/^v-([^:.]+)(?::([^.]+))?((?:\.[^.]+)*)$/) || [];
-            /* if directive is not set Vue will display a warning if
-             * configuration allowed it */
-            const directive = resolveDirective(directiveName);
-            const modifiers = strModifiers.split('.').reduce((mods, val) => {
-                if (val) {
-                    mods[val] = true;
-                }
-                return mods;
-            }, {} as Record<string, boolean>);
 
-            if (directive) {
-                directives.push([
-                    directive,
-                    value,
-                    directiveArg,
-                    modifiers,
-                ]);
+            switch (directiveName) {
+            case 'html':
+                vData['innerHTML'] = inData[key];
+                break;
+
+            default:
+                /* if directive is not set Vue will display a warning if
+                 * configuration allowed it */
+                const directive = resolveDirective(directiveName);
+                const modifiers = strModifiers.split('.').reduce((mods, val) => {
+                    if (val) {
+                        mods[val] = true;
+                    }
+                    return mods;
+                }, {} as Record<string, boolean>);
+
+                if (directive) {
+                    directives.push([
+                        directive,
+                        value,
+                        directiveArg,
+                        modifiers,
+                    ]);
+                }
             }
         } else if (key === 'on') {
             /*  Manage events */
