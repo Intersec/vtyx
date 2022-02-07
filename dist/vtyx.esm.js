@@ -113,13 +113,15 @@ function buildVNode(type, props, args = []) {
         /* In Vue3, children in slots should be given from a function.
          * So instead returning a VNode it should be an object with the slot
          * name as attribute and a function returning the VNode as value */
-        const slot = props['slot'];
-        const vNode = {
-            [slot]: () => h$2(type, props, ...args),
+        const { slot } = props;
+        delete props.slot;
+        const slottedVNode = {
+            '__slot': slot,
+            vnode: h$2(type, props, ...args),
         };
         /* XXX: fake the type to simplify TS usage, but this format is
          * correctly supported by Vue3 */
-        return vNode;
+        return slottedVNode;
     }
     /* This is a normal vNode */
     return h$2(type, props, ...args);
@@ -146,7 +148,28 @@ function cleanArgs(type, args) {
 function h$1(type, props, ...args) {
     const { props: hProps, directives } = props ? hArgV2ToV3(props) : { props };
     const hArgs = cleanArgs(type, args);
-    const vNode = buildVNode(type, hProps, hArgs);
+    let hasSlots = false;
+    const slots = {};
+    const slottedArgs = hArgs.reduce((argList, arg) => {
+        var _a;
+        var _b;
+        if (arg === null || arg === void 0 ? void 0 : arg.__slot) {
+            const slotted = arg;
+            (_a = slots[_b = slotted.__slot]) !== null && _a !== void 0 ? _a : (slots[_b] = []);
+            slots[slotted.__slot].push(slotted.vnode);
+            hasSlots = true;
+            return argList;
+        }
+        argList.push(arg);
+        return argList;
+    }, []);
+    if (hasSlots) {
+        slots['default'] = slottedArgs;
+    }
+    const vNode = buildVNode(type, hProps, hasSlots ? [Object.keys(slots).reduce((res, key) => {
+            res[key] = () => slots[key];
+            return res;
+        }, {})] : hArgs);
     if (directives) {
         return withDirectives(vNode, directives);
     }

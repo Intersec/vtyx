@@ -217,3 +217,15 @@ tape.test('must clean args of DOM elements', (t) => {
 
     t.end();
 });
+
+tape.test('must handle multiple slots', (t) => {
+    const child1 = vtyx.h('div', { slot: 'foo' });
+    const child2 = vtyx.h('div', { slot: 'bar' });
+
+    const res = vtyx.h('div', null, child1, child2);
+
+    t.ok(res);
+
+    t.end();
+});
+

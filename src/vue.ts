@@ -15,6 +15,13 @@ interface V3HArgs {
     directives?: DirectiveArgs[];
 }
 
+interface SlottedVNode {
+    __slot: string;
+    vnode: VNode;
+}
+
+type Slots = Record<string, () => VNode[]>;
+
 /* {{{ Render wrapper */
 
 interface RenderAttributes extends VueRenderAttributes {
@@ -142,21 +149,23 @@ function buildVNode(type: any, props?: any, args: any[] = []): VNode {
         /* In Vue3, children in slots should be given from a function.
          * So instead returning a VNode it should be an object with the slot
          * name as attribute and a function returning the VNode as value */
-        const slot = props['slot'];
-        const vNode = {
-            [slot]: () => _h(type, props, ...args),
+        const { slot } = props;
+        delete props.slot;
+        const slottedVNode: SlottedVNode = {
+            '__slot': slot,
+            vnode: _h(type, props, ...args),
         };
 
         /* XXX: fake the type to simplify TS usage, but this format is
          * correctly supported by Vue3 */
-        return vNode as unknown as VNode;
+        return slottedVNode as unknown as VNode;
     }
 
     /* This is a normal vNode */
     return _h(type, props, ...args);
 }
 
-function cleanArgs<T = any>(type: any, args: T[]): T[] {
+function cleanArgs<T = any>(type: any, args: T[]): Array<T | SlottedVNode> {
     if (args.length) {
         return args.reduce((argList, arg) => {
             /* Remove values like false, null or undefined which are not VNode */
@@ -183,7 +192,30 @@ export function h(type: any, props?: any, ...args: any[]) {
     const {props: hProps, directives}: V3HArgs = props ? hArgV2ToV3(props) : { props };
     const hArgs = cleanArgs(type, args);
 
-    const vNode = buildVNode(type, hProps, hArgs);
+    let hasSlots = false;
+    const slots: Record<string, VNode[]> = {};
+    let hSlots: Slots[] | undefined;
+    const slottedArgs = hArgs.reduce((argList, arg) => {
+        if (arg?.__slot) {
+            const slotted = arg as SlottedVNode;
+            slots[slotted.__slot] ??= [];
+            slots[slotted.__slot].push(slotted.vnode);
+            hasSlots = true;
+            return argList;
+        }
+        argList.push(arg);
+        return argList;
+    }, []);
+    if (hasSlots) {
+        slots['default'] = slottedArgs;
+        hSlots = [Object.entries(slots).reduce((res, [key, vNodes]) => {
+            res[key] = () => vNodes;
+            return res;
+        }, {} as Slots)];
+    }
+
+    const vNode = buildVNode(type, hProps, hSlots || hArgs);
+
     if (directives) {
         return withDirectives(vNode, directives);
     } else {
