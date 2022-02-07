@@ -186,6 +186,15 @@ function nonReactive(value) {
     return reactivity.markRaw(value);
 }
 
+const Component = (v) => v;
+function Emits(events) {
+    return vueClassComponent.createDecorator((componentOptions) => {
+        componentOptions.emits || (componentOptions.emits = []);
+        const eventList = new Set([...componentOptions.emits, ...events]);
+        componentOptions.emits = Array.from(eventList);
+    });
+}
+
 /** Purpose:
  * List all directives which should be register in VueJs.
  */
@@ -231,9 +240,13 @@ function registerDirectives(app, ds) {
  *  * Intrinsic elements are described in the 'jsx.ts' file.
  */
 const h = h$1;
-/* }}} */
-const Component = (v) => v;
 
+Object.defineProperty(exports, 'mixins', {
+    enumerable: true,
+    get: function () {
+        return vueClassComponent.mixins;
+    }
+});
 Object.defineProperty(exports, 'createApp', {
     enumerable: true,
     get: function () {
@@ -283,6 +296,7 @@ Object.defineProperty(exports, 'Watch', {
     }
 });
 exports.Component = Component;
+exports.Emits = Emits;
 exports.Vue = Vue;
 exports.directives = directives;
 exports.h = h;

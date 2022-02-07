@@ -1,6 +1,7 @@
 import { withDirectives, h as h$2 } from '@vue/runtime-core';
 import { markRaw } from '@vue/reactivity';
-import { Vue as Vue$1 } from 'vue-class-component';
+import { Vue as Vue$1, createDecorator } from 'vue-class-component';
+export { mixins } from 'vue-class-component';
 import { resolveDirective } from 'vue';
 export { createApp } from 'vue';
 export { Emit, Inject, Model, Prop, Provide, Ref, Watch } from 'vue-property-decorator';
@@ -183,6 +184,15 @@ function nonReactive(value) {
     return markRaw(value);
 }
 
+const Component = (v) => v;
+function Emits(events) {
+    return createDecorator((componentOptions) => {
+        componentOptions.emits || (componentOptions.emits = []);
+        const eventList = new Set([...componentOptions.emits, ...events]);
+        componentOptions.emits = Array.from(eventList);
+    });
+}
+
 /** Purpose:
  * List all directives which should be register in VueJs.
  */
@@ -228,7 +238,5 @@ function registerDirectives(app, ds) {
  *  * Intrinsic elements are described in the 'jsx.ts' file.
  */
 const h = h$1;
-/* }}} */
-const Component = (v) => v;
 
-export { Component, Vue, directives, h, nonReactive, registerDirectives };
+export { Component, Emits, Vue, directives, h, nonReactive, registerDirectives };
