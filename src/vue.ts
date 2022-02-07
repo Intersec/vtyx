@@ -157,7 +157,7 @@ function buildVNode(type: any, props?: any, args: any[] = []): VNode {
 }
 
 function cleanArgs<T = any>(type: any, args: T[]): T[] {
-    if (type?.prototype instanceof Vue && args.length) {
+    if (args.length) {
         return args.reduce((argList, arg) => {
             /* Remove values like false, null or undefined which are not VNode */
             if (!arg) {

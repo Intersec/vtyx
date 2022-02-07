@@ -127,7 +127,7 @@ function buildVNode(type, props, args = []) {
     return runtimeCore.h(type, props, ...args);
 }
 function cleanArgs(type, args) {
-    if ((type === null || type === void 0 ? void 0 : type.prototype) instanceof Vue && args.length) {
+    if (args.length) {
         return args.reduce((argList, arg) => {
             /* Remove values like false, null or undefined which are not VNode */
             if (!arg) {

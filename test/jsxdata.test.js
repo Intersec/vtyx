@@ -208,3 +208,12 @@ tape.test('must handle v-html directive', (t) => {
 
     t.end();
 });
+
+tape.test('must clean args of DOM elements', (t) => {
+    const res = vtyx.h('span', null, false);
+
+    t.equal(res.type, 'span');
+    t.equal(res.children, null);
+
+    t.end();
+});
