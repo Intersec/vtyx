@@ -150,6 +150,7 @@ function h$1(type, props, ...args) {
     const hArgs = cleanArgs(type, args);
     let hasSlots = false;
     const slots = {};
+    let hSlots;
     const slottedArgs = hArgs.reduce((argList, arg) => {
         var _a;
         var _b;
@@ -165,11 +166,12 @@ function h$1(type, props, ...args) {
     }, []);
     if (hasSlots) {
         slots['default'] = slottedArgs;
+        hSlots = [Object.entries(slots).reduce((res, [key, vNodes]) => {
+                res[key] = () => vNodes;
+                return res;
+            }, {})];
     }
-    const vNode = buildVNode(type, hProps, hasSlots ? [Object.keys(slots).reduce((res, key) => {
-            res[key] = () => slots[key];
-            return res;
-        }, {})] : hArgs);
+    const vNode = buildVNode(type, hProps, hSlots || hArgs);
     if (directives) {
         return withDirectives(vNode, directives);
     }
