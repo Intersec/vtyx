@@ -36,6 +36,9 @@ enum EventModifiers {
     Stop = 1 << 2,
 }
 
+/** Modifiers that are related to the construction of the listener. */
+const LISTENER_MODIFIERS = ['once', 'capture', 'passive'];
+
 function applyModifiers(cb: (...args: any[]) => any,
                         modifiers: EventModifiers)
 {
@@ -69,6 +72,10 @@ function handleEventModifiers(cb: (...args: unknown[]) => unknown, elems: string
         return applyModifiers(cb, modifiers);
     }
     return cb;
+}
+
+function upperFirstLetter(str: string): string {
+    return str[0].toUpperCase() + str.slice(1);
 }
 
 /* }}} */
@@ -128,9 +135,23 @@ function hArgV2ToV3(inData: RenderAttributes): V3HArgs {
             const value = inData[key]!;
 
             for (const [onKey, onVal] of Object.entries(value)) {
-                const elems = onKey.split('.');
+                let elems = onKey.split('.');
                 const name = elems.shift()!;
-                const propKey = 'on' + name[0].toUpperCase() + name.slice(1);
+
+                /* Listener event modifiers should be added to the event name.
+                 * For example: onClickCapture, onMouseoverOnceCapture */
+                const modifiers: string[] = [];
+                /* Remove listener event modifiers from elems in order to
+                 * manage only modifiers related to the event afterward. */
+                elems = elems.filter((modifier) => {
+                    if (LISTENER_MODIFIERS.includes(modifier)) {
+                        modifiers.push(upperFirstLetter(modifier));
+                        return false;
+                    }
+                    return true;
+                });
+
+                const propKey = 'on' + upperFirstLetter(name) + modifiers.join('');
                 vData[propKey] = handleEventModifiers(onVal, elems);
             }
         } else {
