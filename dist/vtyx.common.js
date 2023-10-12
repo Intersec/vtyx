@@ -16,6 +16,8 @@ var EventModifiers;
     EventModifiers[EventModifiers["Prevent"] = 2] = "Prevent";
     EventModifiers[EventModifiers["Stop"] = 4] = "Stop";
 })(EventModifiers || (EventModifiers = {}));
+/** Modifiers that are related to the construction of the listener. */
+const LISTENER_MODIFIERS = ['once', 'capture', 'passive'];
 function applyModifiers(cb, modifiers) {
     return (evt, ...args) => {
         if (modifiers & EventModifiers.Prevent) {
@@ -45,6 +47,9 @@ function handleEventModifiers(cb, elems) {
         return applyModifiers(cb, modifiers);
     }
     return cb;
+}
+function upperFirstLetter(str) {
+    return str[0].toUpperCase() + str.slice(1);
 }
 /* }}} */
 /* Partial conversion to VNodeData
@@ -95,9 +100,21 @@ function hArgV2ToV3(inData) {
             /*  Manage events */
             const value = inData[key];
             for (const [onKey, onVal] of Object.entries(value)) {
-                const elems = onKey.split('.');
+                let elems = onKey.split('.');
                 const name = elems.shift();
-                const propKey = 'on' + name[0].toUpperCase() + name.slice(1);
+                /* Listener event modifiers should be added to the event name.
+                 * For example: onClickCapture, onMouseoverOnceCapture */
+                const modifiers = [];
+                /* Remove listener event modifiers from elems in order to
+                 * manage only modifiers related to the event afterward. */
+                elems = elems.filter((modifier) => {
+                    if (LISTENER_MODIFIERS.includes(modifier)) {
+                        modifiers.push(upperFirstLetter(modifier));
+                        return false;
+                    }
+                    return true;
+                });
+                const propKey = 'on' + upperFirstLetter(name) + modifiers.join('');
                 vData[propKey] = handleEventModifiers(onVal, elems);
             }
         }
