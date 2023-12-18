@@ -1,4 +1,8 @@
 import { Visible } from './directives';
+declare type CrossOrigin = 'anonymous' | 'use-credentials' | '' | undefined;
+declare type PointerEvents = 'bounding-box' | 'visiblePainted' | 'visibleFill' | 'visibleStroke' | 'visible' | 'painted' | 'fill' | 'stroke' | 'all' | 'none';
+declare type Align = 'none' | 'xMinYMin' | 'xMidYMin' | 'xMaxYMin' | 'xMinYMid' | 'xMidYMid' | 'xMaxYMid' | 'xMinYMax' | 'xMidYMax' | 'xMaxYMax';
+declare type PreserveAspectRatio = Align | `${Align} meet` | `${Align} slice`;
 export interface SyntheticEvent<T> {
     currentTarget: EventTarget & T;
     target: EventTarget;
@@ -55,46 +59,7 @@ export interface DOMAttributes<T> {
     onChange?: FormEventHandler<T>;
     onInput?: FormEventHandler<T>;
 }
-export interface HTMLAttributes<T> extends DOMAttributes<T>, VueRenderAttributes {
-    accessKey?: string;
-    contentEditable?: boolean;
-    contextMenu?: string;
-    dir?: string;
-    draggable?: boolean;
-    hidden?: boolean;
-    id?: string;
-    lang?: string;
-    slot?: string;
-    spellCheck?: boolean;
-    style?: string;
-    tabIndex?: number;
-    title?: string;
-    inputMode?: string;
-    is?: string;
-    radioGroup?: string;
-    role?: string;
-    about?: string;
-    datatype?: string;
-    inlist?: any;
-    prefix?: string;
-    property?: string;
-    resource?: string;
-    typeof?: string;
-    vocab?: string;
-    autocapitalize?: string;
-    autocorrect?: string;
-    autosave?: string;
-    color?: string;
-    itemProp?: string;
-    itemScope?: boolean;
-    itemType?: string;
-    itemID?: string;
-    itemRef?: string;
-    results?: number;
-    security?: string;
-    unselectable?: boolean;
-}
-export interface HTMLAttributes<T> extends DOMAttributes<T> {
+export interface AriaAttributes<T> extends DOMAttributes<T> {
     /** Identifies the currently active element when DOM focus is on a
      *  composite widget, textbox, group, or application.
      */
@@ -256,7 +221,7 @@ export interface HTMLAttributes<T> extends DOMAttributes<T> {
      * accessibility tree within a live region is modified.
      * @see aria-atomic.
      */
-    'aria-relevant'?: 'additions' | 'additions text' | 'all' | 'removals' | 'text';
+    'aria-relevant'?: 'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals';
     /** Indicates that user input is required on the element before a form may be submitted. */
     'aria-required'?: boolean | 'false' | 'true';
     /** Defines a human-readable, author-localized description for the role of an element. */
@@ -305,6 +270,45 @@ export interface HTMLAttributes<T> extends DOMAttributes<T> {
      * range widget.
      */
     'aria-valuetext'?: string;
+}
+export interface HTMLAttributes<T> extends AriaAttributes<T>, DOMAttributes<T>, VueRenderAttributes {
+    accessKey?: string;
+    contentEditable?: boolean | 'inherit';
+    contextMenu?: string;
+    dir?: string;
+    draggable?: boolean;
+    hidden?: boolean;
+    id?: string;
+    lang?: string;
+    slot?: string;
+    spellCheck?: boolean;
+    style?: string;
+    tabIndex?: number;
+    title?: string;
+    inputMode?: string;
+    is?: string;
+    radioGroup?: string;
+    role?: string;
+    about?: string;
+    datatype?: string;
+    inlist?: any;
+    prefix?: string;
+    property?: string;
+    resource?: string;
+    typeof?: string;
+    vocab?: string;
+    autocapitalize?: string;
+    autocorrect?: string;
+    autosave?: string;
+    color?: string;
+    itemProp?: string;
+    itemScope?: boolean;
+    itemType?: string;
+    itemID?: string;
+    itemRef?: string;
+    results?: number;
+    security?: string;
+    unselectable?: boolean;
 }
 export interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
     download?: any;
@@ -426,7 +430,7 @@ export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
     autofocus?: boolean;
     capture?: boolean;
     checked?: boolean;
-    crossOrigin?: string;
+    crossOrigin?: CrossOrigin;
     disabled?: boolean;
     form?: string;
     formAction?: string;
@@ -471,7 +475,7 @@ export interface LiHTMLAttributes<T> extends HTMLAttributes<T> {
 }
 export interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
     as?: string;
-    crossOrigin?: string;
+    crossOrigin?: CrossOrigin;
     href?: string;
     hrefLang?: string;
     integrity?: string;
@@ -490,7 +494,7 @@ export interface MediaHTMLAttributes<T> extends HTMLAttributes<T> {
     autoplay?: boolean;
     controls?: boolean;
     controlsList?: string;
-    crossOrigin?: string;
+    crossOrigin?: CrossOrigin;
     loop?: boolean;
     mediaGroup?: string;
     muted?: boolean;
@@ -557,7 +561,7 @@ export interface ProgressHTMLAttributes<T> extends HTMLAttributes<T> {
 export interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
     async?: boolean;
     charSet?: string;
-    crossOrigin?: string;
+    crossOrigin?: CrossOrigin;
     defer?: boolean;
     integrity?: string;
     nonce?: string;
@@ -637,7 +641,7 @@ export interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
     poster?: string;
     width?: number | string;
 }
-export interface IntrinsicElements {
+export interface HTMLElements {
     a: AnchorHTMLAttributes<HTMLAnchorElement>;
     abbr: HTMLAttributes<HTMLElement>;
     address: HTMLAttributes<HTMLElement>;
@@ -738,10 +742,10 @@ export interface IntrinsicElements {
     sup: HTMLAttributes<HTMLElement>;
     table: TableHTMLAttributes<HTMLTableElement>;
     tbody: HTMLAttributes<HTMLTableSectionElement>;
-    td: TdHTMLAttributes<HTMLTableDataCellElement>;
+    td: TdHTMLAttributes<HTMLTableCellElement>;
     textarea: TextareaHTMLAttributes<HTMLTextAreaElement>;
     tfoot: HTMLAttributes<HTMLTableSectionElement>;
-    th: ThHTMLAttributes<HTMLTableHeaderCellElement>;
+    th: ThHTMLAttributes<HTMLTableCellElement>;
     thead: HTMLAttributes<HTMLTableSectionElement>;
     time: TimeHTMLAttributes<HTMLElement>;
     title: HTMLAttributes<HTMLTitleElement>;
@@ -753,3 +757,496 @@ export interface IntrinsicElements {
     video: VideoHTMLAttributes<HTMLVideoElement>;
     wbr: HTMLAttributes<HTMLElement>;
 }
+interface SVGAttributes<T> extends AriaAttributes<T>, DOMAttributes<T>, VueRenderAttributes {
+    className?: string;
+    height?: number | string;
+    id?: string;
+    lang?: string;
+    media?: string;
+    method?: string;
+    name?: string;
+    style?: string;
+    target?: string;
+    type?: string;
+    width?: number | string;
+    role?: string;
+    tabIndex?: number;
+    crossOrigin?: CrossOrigin;
+    accumulate?: 'none' | 'sum';
+    additive?: 'replace' | 'sum';
+    alignmentBaseline?: 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
+    allowReorder?: 'no' | 'yes';
+    amplitude?: number | string;
+    attributeName?: string;
+    /** @deprecated */
+    attributeType?: string;
+    autoReverse?: boolean;
+    azimuth?: number | string;
+    baseFrequency?: number | string;
+    baselineShift?: number | string;
+    /** @deprecated */
+    clip?: number | string;
+    clipPathUnits?: number | string;
+    colorInterpolation?: number | string;
+    colorInterpolationFilters?: 'auto' | 'sRGB' | 'linearRGB' | 'inherit';
+    /** @deprecated */
+    colorProfile?: number | string;
+    colorRendering?: number | string;
+    cursor?: string;
+    decelerate?: number | string;
+    diffuseConstant?: number | string;
+    direction?: number | string;
+    display?: string;
+    dominantBaseline?: number | string;
+    elevation?: number | string;
+    /** @deprecated */
+    enableBackground?: number | string;
+    exponent?: number | string;
+    externalResourcesRequired?: boolean;
+    filter?: string;
+    /** @deprecated */
+    filterRes?: number | string;
+    filterUnits?: number | string;
+    floodColor?: number | string;
+    floodOpacity?: number | string;
+    focusable?: boolean | 'auto';
+    fontFamily?: string;
+    fontSize?: number | string;
+    fontSizeAdjust?: number | string;
+    fontStretch?: number | string;
+    fontStyle?: number | string;
+    fontVariant?: number | string;
+    fontWeight?: number | string;
+    format?: number | string;
+    /** @deprecated */
+    glyphOrientationHorizontal?: number | string;
+    /** @deprecated */
+    glyphOrientationVertical?: number | string;
+    glyphRef?: number | string;
+    href?: string;
+    imageRendering?: number | string;
+    in?: string;
+    intercept?: number | string;
+    /** @deprecated */
+    kernelUnitLength?: number | string;
+    /** @deprecated */
+    kerning?: number | string;
+    letterSpacing?: number | string;
+    lightingColor?: number | string;
+    limitingConeAngle?: number | string;
+    local?: number | string;
+    markerEnd?: string;
+    markerHeight?: number | string;
+    markerMid?: string;
+    markerStart?: string;
+    markerUnits?: number | string;
+    markerWidth?: number | string;
+    mask?: string;
+    maskContentUnits?: number | string;
+    maskUnits?: number | string;
+    numOctaves?: number | string;
+    offset?: number | string;
+    opacity?: number | string;
+    orient?: number | string;
+    origin?: number | string;
+    overflow?: number | string;
+    overlinePosition?: number | string;
+    overlineThickness?: number | string;
+    paintOrder?: number | string;
+    pointerEvents?: PointerEvents;
+    pointsAtX?: number | string;
+    pointsAtY?: number | string;
+    pointsAtZ?: number | string;
+    preserveAspectRatio?: PreserveAspectRatio;
+    primitiveUnits?: number | string;
+    refX?: number | string;
+    refY?: number | string;
+    renderingIntent?: number | string;
+    requiredExtensions?: number | string;
+    /** @deprecated */
+    requiredFeatures?: number | string;
+    result?: string;
+    seed?: number | string;
+    specularConstant?: number | string;
+    specularExponent?: number | string;
+    speed?: number | string;
+    stitchTiles?: number | string;
+    stopColor?: string;
+    stopOpacity?: number | string;
+    strikethroughPosition?: number | string;
+    strikethroughThickness?: number | string;
+    surfaceScale?: number | string;
+    systemLanguage?: number | string;
+    tableValues?: number | string;
+    textAnchor?: string;
+    textDecoration?: number | string;
+    textRendering?: number | string;
+    transform?: string;
+    underlinePosition?: number | string;
+    underlineThickness?: number | string;
+    unicodeBidi?: number | string;
+    viewBox?: string;
+    /** @deprecated */
+    viewTarget?: number | string;
+    visibility?: 'visible' | 'hidden' | 'collapse';
+    wordSpacing?: number | string;
+    writingMode?: number | string;
+    x?: number | string;
+    xlinkActuate?: string;
+    /** @deprecated */
+    xlinkArcrole?: string;
+    /** @deprecated use href */
+    xlinkHref?: string;
+    /** @deprecated */
+    xlinkRole?: string;
+    /** @deprecated */
+    xlinkShow?: string;
+    /** @deprecated use title */
+    xlinkTitle?: string;
+    /** @deprecated */
+    xlinkType?: string;
+    /** @deprecated */
+    xmlLang?: string;
+    xmlnsXlink?: string;
+    /** @deprecated */
+    xmlSpace?: string;
+    y?: number | string;
+    z?: number | string;
+    /** @deprecated */
+    zoomAndPan?: string;
+}
+interface SVGProps<T> extends SVGAttributes<T> {
+}
+interface SVGAnimationTimingAttributes {
+    begin?: number | string;
+    dur?: number | string;
+    end?: number | string;
+    min?: string;
+    max?: string;
+    restart?: 'always' | 'whenNotActive' | 'never';
+    repeatCount?: number | string | 'indefinite';
+    repeatDur?: string | 'indefinite';
+    fill?: 'freeze' | 'remove';
+}
+interface SVGAnimationValueAttributes {
+    by?: number | string;
+    calcMode?: 'discrete' | 'linear' | 'paced' | 'spline';
+    from?: number | string;
+    keySplines?: number | string;
+    keyTimes?: number | string;
+    to?: number | string;
+    values?: string;
+}
+interface SVGPresentationAttributes {
+    clipPath?: string;
+    clipRule?: 'nonzero' | 'evenodd' | 'inherit';
+    color?: string | 'inherit';
+    colorInterpolation?: number | string;
+    colorRendering?: number | string;
+    cursor?: string;
+    display?: string;
+    fill?: string;
+    fillOpacity?: number | string;
+    fillRule?: 'nonzero' | 'evenodd' | 'inherit';
+    filter?: string;
+    mask?: string;
+    opacity?: number | string;
+    pointerEvents?: PointerEvents;
+    shapeRendering?: 'auto' | 'optimizeSpeed' | 'crispEdges' | 'geometricPrecision';
+    stroke?: string;
+    strokeDasharray?: string | number;
+    strokeDashoffset?: string | number;
+    strokeLinecap?: 'butt' | 'round' | 'square' | 'inherit';
+    strokeLinejoin?: 'miter' | 'round' | 'bevel' | 'inherit';
+    strokeMiterlimit?: number | string;
+    strokeOpacity?: number | string;
+    strokeWidth?: number | string;
+    transform?: string;
+    vectorEffect?: 'none' | 'non-scaling-stroke' | 'non-scaling-size' | 'non-rotation' | 'fixed-position';
+    visibility?: 'visible' | 'hidden' | 'collapse';
+}
+interface SVGSvgElementAttributes<T> extends SVGProps<T> {
+    /** @deprecated */
+    baseProfile?: number | string;
+    /** @deprecated */
+    contentScriptType?: number | string;
+    /** @deprecated */
+    contentStyleType?: number | string;
+    height?: number | string;
+    preserveAspectRatio?: PreserveAspectRatio;
+    /** @deprecated It is purely advisory and has no influence on rendering or processing. */
+    version?: string;
+    viewBox?: string;
+    width?: number | string;
+    x?: number | string;
+    y?: number | string;
+    xmlns?: string;
+}
+interface SVGAnimateElementAttributes<T> extends SVGAnimationValueAttributes, SVGAnimationTimingAttributes, SVGProps<T> {
+}
+interface SVGAnimateMotionElementAttributes<T> extends SVGAnimationValueAttributes, SVGAnimationTimingAttributes, SVGProps<T> {
+    keyPoints?: number | string;
+    /** @experimental */
+    path?: string;
+    /** @experimental */
+    rotate?: 'auto' | 'auto-reverse' | number;
+}
+interface SVGAnimateTransformElementAttributes<T> extends SVGAnimationValueAttributes, SVGAnimationTimingAttributes, SVGProps<T> {
+    type?: 'translate' | 'scale' | 'rotate' | 'skewX' | 'skewY';
+}
+interface SVGCircleElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    cx?: number | string;
+    cy?: number | string;
+    pathLength?: number | string;
+    r?: number | string;
+}
+interface SVGEllipseElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    cx?: number | string;
+    cy?: number | string;
+    pathLength?: number | string;
+    rx?: number | string;
+    ry?: number | string;
+}
+interface SVGFeBlendElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    in2?: number | string;
+    mode?: number | string;
+}
+interface SVGFeColorMatrixElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    type?: 'matrix' | 'saturate' | 'hueRotate' | 'luminanceToAlpha';
+    values?: string;
+}
+interface SVGFeCompositeElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    in2?: number | string;
+    k1?: number | string;
+    k2?: number | string;
+    k3?: number | string;
+    k4?: number | string;
+    operator?: 'over' | 'in' | 'out' | 'atop' | 'xor' | 'lighter' | 'arithmetic';
+}
+interface SVGFeConvolveMatrixElementAttributes<T> extends SVGProps<T> {
+    bias?: number | string;
+    divisor?: number | string;
+    edgeMode?: number | string;
+    in?: string;
+    kernelMatrix?: number | string;
+    order?: number;
+    preserveAlpha?: boolean;
+    targetX?: number | string;
+    targetY?: number | string;
+}
+interface SVGFeDisplacementMapElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    in2?: number | string;
+    scale?: number | string;
+    xChannelSelector?: string;
+    yChannelSelector?: string;
+}
+interface SVGFeDropShadowElementAttributes<T> extends SVGProps<T> {
+    dx?: number | string;
+    dy?: number | string;
+    stdDeviation?: number | string;
+}
+interface SVGFeGaussianBlurElementAttributes<T> extends SVGProps<T> {
+    edgeMode?: number | string;
+    in?: string;
+    stdDeviation?: number | string;
+}
+interface SVGFeMorphologyElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    operator?: 'over' | 'in' | 'out' | 'atop' | 'xor' | 'lighter' | 'arithmetic';
+    radius?: number | string;
+}
+interface SVGFeOffsetElementAttributes<T> extends SVGProps<T> {
+    in?: string;
+    dx?: number | string;
+    dy?: number | string;
+}
+interface SVGForeignObjectElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    height?: number | string;
+    width?: number | string;
+    x?: number | string;
+    y?: number | string;
+}
+interface SVGImageElementAttributes<T> extends SVGProps<T> {
+    crossOrigin?: CrossOrigin;
+    decoding?: 'auto' | 'async' | 'sync';
+    height?: number | string;
+    href?: string;
+    preserveAspectRatio?: PreserveAspectRatio;
+    width?: number | string;
+    x?: number | string;
+    y?: number | string;
+}
+interface SVGLineElementAttributes<T> extends SVGProps<T> {
+    pathLength?: number | string;
+    x1?: number | string;
+    x2?: number | string;
+    y1?: number | string;
+    y2?: number | string;
+}
+interface SVGLinearGradientElementAttributes<T> extends SVGProps<T> {
+    gradientTransform?: string;
+    gradientUnits?: string;
+    href?: string;
+    spreadMethod?: string;
+    x1?: number | string;
+    x2?: number | string;
+    y1?: number | string;
+    y2?: number | string;
+}
+interface SVGPathElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    d?: string;
+    pathLength?: number | string;
+}
+interface SVGPatternElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    height?: number | string;
+    href?: string;
+    patternContentUnits?: 'userSpaceOnUse' | 'objectBoundingBox';
+    patternTransform?: string;
+    patternUnits?: 'userSpaceOnUse' | 'objectBoundingBox';
+    preserveAspectRatio?: PreserveAspectRatio;
+    viewBox?: string;
+    width?: number | string;
+    x?: number | string;
+    /** @deprecated use href */
+    xlinkHref?: string;
+    y?: number | string;
+}
+interface SVGPolygonElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    pathLength?: number | string;
+    points?: string;
+}
+interface SVGPolylineElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    pathLength?: number | string;
+    points?: string;
+}
+interface SVGRadialGradientElementAttributes<T> extends SVGProps<T> {
+    cx?: number | string;
+    cy?: number | string;
+    fr?: number | string;
+    fx?: number | string;
+    fy?: number | string;
+    gradientTransform?: string;
+    gradientUnits?: string;
+    href?: string;
+    r?: number | string;
+    spreadMethod?: string;
+}
+interface SVGRectElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    x?: number | string;
+    y?: number | string;
+    width?: number | string;
+    height?: number | string;
+    rx?: number | string;
+    ry?: number | string;
+    pathLength?: number | string;
+}
+interface SVGSetElementAttributes<T> extends SVGAnimationTimingAttributes, SVGProps<T> {
+    keyPoints?: number | string;
+    to?: number | string;
+}
+interface SVGTextElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    dx?: number | string;
+    dy?: number | string;
+    lengthAdjust?: number | string;
+    rotate?: number | string;
+    textLength?: number | string;
+    x?: number | string;
+    y?: number | string;
+}
+interface SVGTextPathElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    href?: string;
+    lengthAdjust?: number | string;
+    /** @experimental */
+    method?: 'align' | 'stretch';
+    /** @experimental */
+    path?: string;
+    /** @experimental */
+    side?: 'left' | 'right';
+    spacing?: number | string;
+    startOffset?: number | string;
+    textLength?: number | string;
+}
+interface SVGTSpanElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    dx?: number | string;
+    dy?: number | string;
+    lengthAdjust?: number | string;
+    rotate?: number | string;
+    textLength?: number | string;
+    x?: number | string;
+    y?: number | string;
+}
+interface SVGUseElementAttributes<T> extends SVGPresentationAttributes, SVGProps<T> {
+    x?: number | string;
+    y?: number | string;
+    width?: number | string;
+    height?: number | string;
+    href?: string;
+}
+export interface SVGElements {
+    svg: SVGSvgElementAttributes<SVGSVGElement>;
+    animate: SVGAnimateElementAttributes<SVGAnimateElement>;
+    animateMotion: SVGAnimateMotionElementAttributes<SVGElement>;
+    animateTransform: SVGAnimateTransformElementAttributes<SVGAnimateTransformElement>;
+    circle: SVGCircleElementAttributes<SVGCircleElement>;
+    clipPath: SVGProps<SVGClipPathElement>;
+    defs: SVGProps<SVGDefsElement>;
+    desc: SVGProps<SVGDescElement>;
+    ellipse: SVGEllipseElementAttributes<SVGEllipseElement>;
+    feBlend: SVGFeBlendElementAttributes<SVGFEBlendElement>;
+    feColorMatrix: SVGFeColorMatrixElementAttributes<SVGFEColorMatrixElement>;
+    feComponentTransfer: SVGProps<SVGFEComponentTransferElement>;
+    feComposite: SVGFeCompositeElementAttributes<SVGFECompositeElement>;
+    feConvolveMatrix: SVGFeConvolveMatrixElementAttributes<SVGFEConvolveMatrixElement>;
+    feDiffuseLighting: SVGProps<SVGFEDiffuseLightingElement>;
+    feDisplacementMap: SVGFeDisplacementMapElementAttributes<SVGFEDisplacementMapElement>;
+    feDistantLight: SVGProps<SVGFEDistantLightElement>;
+    feDropShadow: SVGFeDropShadowElementAttributes<SVGFEDropShadowElement>;
+    feFlood: SVGProps<SVGFEFloodElement>;
+    feFuncA: SVGProps<SVGFEFuncAElement>;
+    feFuncB: SVGProps<SVGFEFuncBElement>;
+    feFuncG: SVGProps<SVGFEFuncGElement>;
+    feFuncR: SVGProps<SVGFEFuncRElement>;
+    feGaussianBlur: SVGFeGaussianBlurElementAttributes<SVGFEGaussianBlurElement>;
+    feImage: SVGProps<SVGFEImageElement>;
+    feMerge: SVGProps<SVGFEMergeElement>;
+    feMergeNode: SVGProps<SVGFEMergeNodeElement>;
+    feMorphology: SVGFeMorphologyElementAttributes<SVGFEMorphologyElement>;
+    feOffset: SVGFeOffsetElementAttributes<SVGFEOffsetElement>;
+    fePointLight: SVGProps<SVGFEPointLightElement>;
+    feSpecularLighting: SVGProps<SVGFESpecularLightingElement>;
+    feSpotLight: SVGProps<SVGFESpotLightElement>;
+    feTile: SVGProps<SVGFETileElement>;
+    feTurbulence: SVGProps<SVGFETurbulenceElement>;
+    filter: SVGProps<SVGFilterElement>;
+    foreignObject: SVGForeignObjectElementAttributes<SVGForeignObjectElement>;
+    g: SVGProps<SVGGElement>;
+    image: SVGImageElementAttributes<SVGImageElement>;
+    line: SVGLineElementAttributes<SVGLineElement>;
+    linearGradient: SVGLinearGradientElementAttributes<SVGLinearGradientElement>;
+    marker: SVGProps<SVGMarkerElement>;
+    mask: SVGProps<SVGMaskElement>;
+    metadata: SVGProps<SVGMetadataElement>;
+    mpath: SVGProps<SVGElement>;
+    path: SVGPathElementAttributes<SVGPathElement>;
+    pattern: SVGPatternElementAttributes<SVGPatternElement>;
+    polygon: SVGPolygonElementAttributes<SVGPolygonElement>;
+    polyline: SVGPolylineElementAttributes<SVGPolylineElement>;
+    radialGradient: SVGRadialGradientElementAttributes<SVGRadialGradientElement>;
+    rect: SVGRectElementAttributes<SVGRectElement>;
+    set: SVGSetElementAttributes<SVGStopElement>;
+    stop: SVGProps<SVGStopElement>;
+    switch: SVGProps<SVGSwitchElement>;
+    symbol: SVGProps<SVGSymbolElement>;
+    text: SVGTextElementAttributes<SVGTextElement>;
+    textPath: SVGTextPathElementAttributes<SVGTextPathElement>;
+    tspan: SVGTSpanElementAttributes<SVGTSpanElement>;
+    use: SVGUseElementAttributes<SVGUseElement>;
+    view: SVGProps<SVGViewElement>;
+}
+export interface IntrinsicElements extends HTMLElements, SVGElements {
+}
+export {};
