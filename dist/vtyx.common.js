@@ -285,57 +285,39 @@ const h = h$1;
 
 Object.defineProperty(exports, 'mixins', {
     enumerable: true,
-    get: function () {
-        return vueClassComponent.mixins;
-    }
+    get: function () { return vueClassComponent.mixins; }
 });
 Object.defineProperty(exports, 'createApp', {
     enumerable: true,
-    get: function () {
-        return vue.createApp;
-    }
+    get: function () { return vue.createApp; }
 });
 Object.defineProperty(exports, 'Emit', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Emit;
-    }
+    get: function () { return vuePropertyDecorator.Emit; }
 });
 Object.defineProperty(exports, 'Inject', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Inject;
-    }
+    get: function () { return vuePropertyDecorator.Inject; }
 });
 Object.defineProperty(exports, 'Model', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Model;
-    }
+    get: function () { return vuePropertyDecorator.Model; }
 });
 Object.defineProperty(exports, 'Prop', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Prop;
-    }
+    get: function () { return vuePropertyDecorator.Prop; }
 });
 Object.defineProperty(exports, 'Provide', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Provide;
-    }
+    get: function () { return vuePropertyDecorator.Provide; }
 });
 Object.defineProperty(exports, 'Ref', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Ref;
-    }
+    get: function () { return vuePropertyDecorator.Ref; }
 });
 Object.defineProperty(exports, 'Watch', {
     enumerable: true,
-    get: function () {
-        return vuePropertyDecorator.Watch;
-    }
+    get: function () { return vuePropertyDecorator.Watch; }
 });
 exports.Component = Component;
 exports.Emits = Emits;

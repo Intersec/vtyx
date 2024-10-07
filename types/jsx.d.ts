@@ -1,11 +1,11 @@
 import { Visible } from './directives';
-declare type CrossOrigin = 'anonymous' | 'use-credentials' | '' | undefined;
-declare type PointerEvents = 'bounding-box' | 'visiblePainted' | 'visibleFill' | 'visibleStroke' | 'visible' | 'painted' | 'fill' | 'stroke' | 'all' | 'none';
-declare type Align = 'none' | 'xMinYMin' | 'xMidYMin' | 'xMaxYMin' | 'xMinYMid' | 'xMidYMid' | 'xMaxYMid' | 'xMinYMax' | 'xMidYMax' | 'xMaxYMax';
-declare type AlignBaseLine = 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
-declare type Cursor = 'auto' | 'crosshair' | 'default' | 'pointer' | 'move' | 'e-resize' | 'ne-resize' | 'nw-resize' | 'n-resize' | 'se-resize' | 'sw-resize' | 's-resize' | 'w-resize' | 'text' | 'wait' | 'help' | 'inherit' | string;
-declare type DominantBaseline = 'auto' | 'text-bottom' | 'alphabetic' | 'ideographic' | 'middle' | 'central' | 'mathematical' | 'hanging' | 'text-top';
-declare type PreserveAspectRatio = Align | `${Align} meet` | `${Align} slice`;
+type CrossOrigin = 'anonymous' | 'use-credentials' | '' | undefined;
+type PointerEvents = 'bounding-box' | 'visiblePainted' | 'visibleFill' | 'visibleStroke' | 'visible' | 'painted' | 'fill' | 'stroke' | 'all' | 'none';
+type Align = 'none' | 'xMinYMin' | 'xMidYMin' | 'xMaxYMin' | 'xMinYMid' | 'xMidYMid' | 'xMaxYMid' | 'xMinYMax' | 'xMidYMax' | 'xMaxYMax';
+type AlignBaseLine = 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
+type Cursor = 'auto' | 'crosshair' | 'default' | 'pointer' | 'move' | 'e-resize' | 'ne-resize' | 'nw-resize' | 'n-resize' | 'se-resize' | 'sw-resize' | 's-resize' | 'w-resize' | 'text' | 'wait' | 'help' | 'inherit' | string;
+type DominantBaseline = 'auto' | 'text-bottom' | 'alphabetic' | 'ideographic' | 'middle' | 'central' | 'mathematical' | 'hanging' | 'text-top';
+type PreserveAspectRatio = Align | `${Align} meet` | `${Align} slice`;
 export interface SyntheticEvent<T> {
     currentTarget: EventTarget & T;
     target: EventTarget;
@@ -38,10 +38,10 @@ export interface KeyboardEvent<T = Element> extends SyntheticEvent<T> {
     shiftKey: boolean;
     which: number;
 }
-export declare type EventHandler<E extends SyntheticEvent<any>> = (event: E) => void;
-export declare type FormEventHandler<T> = EventHandler<FormEvent<T>>;
-export declare type MouseEventHandler<T> = EventHandler<MouseEvent<T>>;
-export declare type VueAttributeClass = string | {
+export type EventHandler<E extends SyntheticEvent<any>> = (event: E) => void;
+export type FormEventHandler<T> = EventHandler<FormEvent<T>>;
+export type MouseEventHandler<T> = EventHandler<MouseEvent<T>>;
+export type VueAttributeClass = string | {
     [key: string]: boolean;
 } | Array<string | {
     [key: string]: boolean;

@@ -6,6 +6,6 @@ export interface Directive {
     name: string;
     directive: ObjectDirective;
 }
-export declare type Visible = boolean;
+export type Visible = boolean;
 export declare const directives: Directive[];
 export declare function registerDirectives(app: App, ds: Directive[]): void;
