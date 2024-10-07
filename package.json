@@ -24,7 +24,7 @@
         "test:eslint": "eslint test/*"
     },
     "dependencies": {
-        "vue": "^3.5.11",
+        "vue": "^3.5.18",
         "vue-class-component": "8.0.0-rc.1",
         "vue-property-decorator": "10.0.0-rc.3"
     },
