@@ -98,6 +98,8 @@ export interface VueRenderOnAttribute {
 
 export interface VueRenderAttributes {
     class?: VueAttributeClass;
+    style?: VueAttributeClass;
+    id?: string;
     on?: VueRenderOnAttribute;
     key?: number | string;
     ref?: string;
