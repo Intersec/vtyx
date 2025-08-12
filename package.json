@@ -32,6 +32,6 @@
         "eslint": "^8.57.1",
         "rollup": "2.79.2",
         "tape": "^5.9.0",
-        "typescript": "~5.6"
+        "typescript": "~5.9"
     }
 }
