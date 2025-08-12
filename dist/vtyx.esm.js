@@ -189,7 +189,7 @@ function h$1(type, props, ...args) {
             }, {})];
     }
     const vNode = buildVNode(type, hProps, hSlots || hArgs);
-    if (directives) {
+    if (directives === null || directives === void 0 ? void 0 : directives.length) {
         return withDirectives(vNode, directives);
     }
     else {
