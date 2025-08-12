@@ -237,7 +237,7 @@ export function h(type: any, props?: any, ...args: any[]) {
 
     const vNode = buildVNode(type, hProps, hSlots || hArgs);
 
-    if (directives) {
+    if (directives?.length) {
         return withDirectives(vNode, directives);
     } else {
         return vNode;
