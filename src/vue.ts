@@ -3,11 +3,16 @@
 import { h as _h, withDirectives } from '@vue/runtime-core';
 import { markRaw } from '@vue/reactivity';
 import { Vue as _Vue } from 'vue-class-component';
-import {
+import type {
+    AriaAttributes,
     SyntheticEvent,
     VueRenderAttributes,
 } from './jsx';
-import { Directive, resolveDirective, VNode } from 'vue';
+import {
+    type Directive,
+    resolveDirective,
+    type VNode,
+} from 'vue';
 
 type DirectiveArgs = [Directive, any, string, Record<string, boolean>];
 interface V3HArgs {
@@ -251,7 +256,7 @@ export { VueConstructor } from 'vue-class-component';
 export class Vue<P extends {}> extends _Vue {
     /* Add a dummy field to type the component in JSX.
      * This field does not actually exist, and is only used in Typescript. */
-    public _jsxProps: P & VueRenderAttributes;
+    public _jsxProps: AriaAttributes & P & VueRenderAttributes;
 
     /* Spoof props as arguments of the constructor, so that the
      * class constructor can depend on props, meaning that the
