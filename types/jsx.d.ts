@@ -1,10 +1,12 @@
-import { Visible } from './directives';
+import type { CSSProperties, InputTypeHTMLAttribute } from 'vue';
+import type { Visible } from './directives';
 type CrossOrigin = 'anonymous' | 'use-credentials' | '' | undefined;
 type PointerEvents = 'bounding-box' | 'visiblePainted' | 'visibleFill' | 'visibleStroke' | 'visible' | 'painted' | 'fill' | 'stroke' | 'all' | 'none';
 type Align = 'none' | 'xMinYMin' | 'xMidYMin' | 'xMaxYMin' | 'xMinYMid' | 'xMidYMid' | 'xMaxYMid' | 'xMinYMax' | 'xMidYMax' | 'xMaxYMax';
 type AlignBaseLine = 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
 type Cursor = 'auto' | 'crosshair' | 'default' | 'pointer' | 'move' | 'e-resize' | 'ne-resize' | 'nw-resize' | 'n-resize' | 'se-resize' | 'sw-resize' | 's-resize' | 'w-resize' | 'text' | 'wait' | 'help' | 'inherit' | string;
 type DominantBaseline = 'auto' | 'text-bottom' | 'alphabetic' | 'ideographic' | 'middle' | 'central' | 'mathematical' | 'hanging' | 'text-top';
+type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
 type PreserveAspectRatio = Align | `${Align} meet` | `${Align} slice`;
 export interface SyntheticEvent<T> {
     currentTarget: EventTarget & T;
@@ -46,12 +48,13 @@ export type VueAttributeClass = string | {
 } | Array<string | {
     [key: string]: boolean;
 }>;
+export type VueAttributeStyle = false | null | undefined | string | CSSProperties | Array<VueAttributeStyle>;
 export interface VueRenderOnAttribute {
     [key: string]: (...args: any[]) => void;
 }
 export interface VueRenderAttributes {
     class?: VueAttributeClass;
-    style?: VueAttributeClass;
+    style?: VueAttributeStyle;
     id?: string;
     on?: VueRenderOnAttribute;
     key?: number | string;
@@ -64,7 +67,7 @@ export interface DOMAttributes<T> {
     onChange?: FormEventHandler<T>;
     onInput?: FormEventHandler<T>;
 }
-export interface AriaAttributes<T> extends DOMAttributes<T> {
+export interface AriaAttributes {
     /** Identifies the currently active element when DOM focus is on a
      *  composite widget, textbox, group, or application.
      */
@@ -107,6 +110,11 @@ export interface AriaAttributes<T> extends DOMAttributes<T> {
      * @see aria-colindex @see aria-rowspan.
      */
     'aria-colspan'?: number;
+    /**
+     * Identifies the element (or elements) whose contents or presence are controlled by the current element.
+     * @see aria-owns.
+     */
+    'aria-controls'?: string;
     /** Indicates the element that represents the current item within a container or set of related elements. */
     'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time';
     /**
@@ -275,57 +283,69 @@ export interface AriaAttributes<T> extends DOMAttributes<T> {
      * range widget.
      */
     'aria-valuetext'?: string;
+    /**
+     * Provides semantic meaning to content, allowing screen readers and other
+     * tools to present and support interaction in a way that is consistent
+     * with user expectations.
+     */
+    role?: string;
 }
-export interface HTMLAttributes<T> extends AriaAttributes<T>, DOMAttributes<T>, VueRenderAttributes {
+export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T>, VueRenderAttributes {
+    about?: string;
     accessKey?: string;
-    contentEditable?: boolean | 'inherit';
+    autocapitalize?: string;
+    autoCorrect?: string;
+    autofocus?: boolean;
+    contentEditable?: boolean | 'inherit' | 'plaintext-only';
     contextMenu?: string;
+    datatype?: string;
     dir?: string;
     draggable?: boolean;
-    hidden?: boolean;
+    hidden?: boolean | '' | 'hidden' | 'until-found';
     id?: string;
-    lang?: string;
-    slot?: string;
-    spellCheck?: boolean;
-    style?: string;
-    tabIndex?: number;
-    title?: string;
-    inputMode?: string;
-    is?: string;
-    radioGroup?: string;
-    role?: string;
-    about?: string;
-    datatype?: string;
     inlist?: any;
-    prefix?: string;
-    property?: string;
-    resource?: string;
-    typeof?: string;
-    vocab?: string;
-    autocapitalize?: string;
-    autocorrect?: string;
-    autosave?: string;
-    color?: string;
+    /**
+     * Hints at the type of data that might be entered by the user while editing the element or its contents
+     * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
+     */
+    inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
+    /**
+     * Specify that a standard HTML element should behave like a defined custom built-in element
+     * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
+     */
+    is?: string;
+    itemID?: string;
     itemProp?: string;
+    itemRef?: string;
     itemScope?: boolean;
     itemType?: string;
-    itemID?: string;
-    itemRef?: string;
+    lang?: string;
+    prefix?: string;
+    property?: string;
+    radioGroup?: string;
+    resource?: string;
     results?: number;
     security?: string;
+    slot?: string;
+    spellCheck?: boolean;
+    style?: VueAttributeStyle;
+    tabIndex?: number;
+    title?: string;
+    translate?: '' | 'yes' | 'no';
+    typeof?: string;
     unselectable?: boolean;
+    vocab?: string;
 }
 export interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
     download?: any;
     href?: string;
     hrefLang?: string;
     media?: string;
+    ping?: string;
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     rel?: string;
     target?: string;
     type?: string;
-    as?: string;
-}
-export interface AudioHTMLAttributes<T> extends MediaHTMLAttributes<T> {
 }
 export interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
     alt?: string;
@@ -334,9 +354,12 @@ export interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
     href?: string;
     hrefLang?: string;
     media?: string;
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     rel?: string;
     shape?: string;
     target?: string;
+}
+export interface AudioHTMLAttributes<T> extends MediaHTMLAttributes<T> {
 }
 export interface BaseHTMLAttributes<T> extends HTMLAttributes<T> {
     href?: string;
@@ -355,7 +378,7 @@ export interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
     formNoValidate?: boolean;
     formTarget?: string;
     name?: string;
-    type?: string;
+    type?: 'submit' | 'reset' | 'button';
     value?: string | string[] | number;
 }
 export interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -370,11 +393,17 @@ export interface ColgroupHTMLAttributes<T> extends HTMLAttributes<T> {
     span?: number;
 }
 export interface DetailsHTMLAttributes<T> extends HTMLAttributes<T> {
+    name?: string;
     open?: boolean;
+    onToggle?: (payload: ToggleEvent) => void;
 }
 export interface DelHTMLAttributes<T> extends HTMLAttributes<T> {
     cite?: string;
     dateTime?: string;
+}
+export interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
+    open?: boolean;
+    onClose?: (payload: Event) => void;
 }
 export interface EmbedHTMLAttributes<T> extends HTMLAttributes<T> {
     height?: number | string;
@@ -401,14 +430,21 @@ export interface HtmlHTMLAttributes<T> extends HTMLAttributes<T> {
     manifest?: string;
 }
 export interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
+    allow?: string;
     allowFullScreen?: boolean;
     allowTransparency?: boolean;
+    /** @deprecated use the CSS property border */
     frameBorder?: number | string;
     height?: number | string;
+    loading?: 'eager' | 'lazy';
+    /** @deprecated use the CSS property margin */
     marginHeight?: number;
+    /** @deprecated use the CSS property margin */
     marginWidth?: number;
     name?: string;
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     sandbox?: string;
+    /** @deprecated use the CSS property overflow */
     scrolling?: string;
     seamless?: boolean;
     src?: string;
@@ -417,7 +453,11 @@ export interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
 }
 export interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
     alt?: string;
+    crossorigin?: 'anonymous' | 'use-credentials' | '';
+    decoding?: 'async' | 'auto' | 'sync';
     height?: number | string;
+    loading?: 'eager' | 'lazy';
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     sizes?: string;
     src?: string;
     srcSet?: string;
@@ -433,10 +473,11 @@ export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
     alt?: string;
     autocomplete?: string;
     autofocus?: boolean;
-    capture?: boolean;
+    capture?: boolean | 'user' | 'environment';
     checked?: boolean;
     crossOrigin?: CrossOrigin;
     disabled?: boolean;
+    enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
     form?: string;
     formAction?: string;
     formEncType?: string;
@@ -444,6 +485,7 @@ export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
     formNoValidate?: boolean;
     formTarget?: string;
     height?: number | string;
+    indeterminate?: boolean;
     list?: string;
     max?: number | string;
     maxLength?: number;
@@ -458,7 +500,7 @@ export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
     size?: number;
     src?: string;
     step?: number | string;
-    type?: string;
+    type?: InputTypeHTMLAttribute;
     value?: string | string[] | number;
     width?: number | string;
 }
@@ -472,19 +514,21 @@ export interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
     name?: string;
 }
 export interface LabelHTMLAttributes<T> extends HTMLAttributes<T> {
-    form?: string;
     'for'?: string;
+    form?: string;
 }
 export interface LiHTMLAttributes<T> extends HTMLAttributes<T> {
     value?: string | string[] | number;
 }
 export interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
     as?: string;
+    charset?: string;
     crossOrigin?: CrossOrigin;
     href?: string;
     hrefLang?: string;
     integrity?: string;
     media?: string;
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     rel?: string;
     sizes?: string;
     type?: string;
@@ -539,6 +583,7 @@ export interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
 export interface OlHTMLAttributes<T> extends HTMLAttributes<T> {
     reversed?: boolean;
     start?: number;
+    type?: '1' | 'a' | 'A' | 'i' | 'I';
 }
 export interface OptgroupHTMLAttributes<T> extends HTMLAttributes<T> {
     disabled?: boolean;
@@ -551,8 +596,8 @@ export interface OptionHTMLAttributes<T> extends HTMLAttributes<T> {
     value?: string | string[] | number;
 }
 export interface OutputHTMLAttributes<T> extends HTMLAttributes<T> {
+    'for'?: string;
     form?: string;
-    for?: string;
     name?: string;
 }
 export interface ParamHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -565,15 +610,19 @@ export interface ProgressHTMLAttributes<T> extends HTMLAttributes<T> {
 }
 export interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
     async?: boolean;
+    /** @deprecated the script element inherits its character encoding from the document */
     charSet?: string;
     crossOrigin?: CrossOrigin;
     defer?: boolean;
     integrity?: string;
+    nomodule?: boolean;
     nonce?: string;
+    referrerPolicy?: HTMLAttributeReferrerPolicy;
     src?: string;
     type?: string;
 }
 export interface SelectHTMLAttributes<T> extends HTMLAttributes<T> {
+    autocomplete?: boolean;
     autofocus?: boolean;
     disabled?: boolean;
     form?: string;
@@ -600,6 +649,7 @@ export interface TableHTMLAttributes<T> extends HTMLAttributes<T> {
     cellPadding?: number | string;
     cellSpacing?: number | string;
     summary?: string;
+    width?: number | string;
 }
 export interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
     autocomplete?: string;
@@ -622,6 +672,7 @@ export interface TdHTMLAttributes<T> extends HTMLAttributes<T> {
     colSpan?: number;
     headers?: string;
     rowSpan?: number;
+    /** @deprecated it should be used only for <th> element */
     scope?: string;
 }
 export interface ThHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -641,6 +692,8 @@ export interface TrackHTMLAttributes<T> extends HTMLAttributes<T> {
     srcLang?: string;
 }
 export interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
+    disablePictureInPicture?: boolean;
+    disableRemotePlayback?: boolean;
     height?: number | string;
     playsInline?: boolean;
     poster?: string;
@@ -675,7 +728,7 @@ export interface HTMLElements {
     del: DelHTMLAttributes<HTMLElement>;
     details: DetailsHTMLAttributes<HTMLElement>;
     dfn: HTMLAttributes<HTMLElement>;
-    dialog: HTMLAttributes<HTMLElement>;
+    dialog: DialogHTMLAttributes<HTMLElement>;
     div: HTMLAttributes<HTMLDivElement>;
     dl: HTMLAttributes<HTMLDListElement>;
     dt: HTMLAttributes<HTMLElement>;
@@ -762,7 +815,7 @@ export interface HTMLElements {
     video: VideoHTMLAttributes<HTMLVideoElement>;
     wbr: HTMLAttributes<HTMLElement>;
 }
-interface SVGAttributes<T> extends AriaAttributes<T>, DOMAttributes<T>, VueRenderAttributes {
+interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T>, VueRenderAttributes {
     className?: string;
     height?: number | string;
     id?: string;
@@ -770,11 +823,10 @@ interface SVGAttributes<T> extends AriaAttributes<T>, DOMAttributes<T>, VueRende
     media?: string;
     method?: string;
     name?: string;
-    style?: string;
+    style?: VueAttributeStyle;
     target?: string;
     type?: string;
     width?: number | string;
-    role?: string;
     tabIndex?: number;
     allowReorder?: 'no' | 'yes';
     amplitude?: number | string;

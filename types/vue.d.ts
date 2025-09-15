@@ -1,12 +1,12 @@
 import { Vue as _Vue } from 'vue-class-component';
-import { VueRenderAttributes } from './jsx';
-import { VNode } from 'vue';
+import type { AriaAttributes, VueRenderAttributes } from './jsx';
+import { type VNode } from 'vue';
 export declare function h(type: any, props?: any, ...args: any[]): VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
 }>;
 export { VueConstructor } from 'vue-class-component';
 export declare class Vue<P extends {}> extends _Vue {
-    _jsxProps: P & VueRenderAttributes;
+    _jsxProps: AriaAttributes & P & VueRenderAttributes;
     constructor(_opts?: any, _props?: P);
 }
 /**
